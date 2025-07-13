@@ -47,7 +47,7 @@ const PostMe = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-10 px-6 md:px-16">
+    <div className= "min-h-screen bg-gray-900 text-white py-10 px-6 md:px-16">
       <h2 className="text-4xl font-bold text-yellow-400 mb-8 text-center">Post Missing Person</h2>
       <form
         onSubmit={handleSubmit}
@@ -176,17 +176,17 @@ const PostMe = () => {
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end gap-4 mt-6">
+        <div className= "flex justify-end gap-4 mt-6">
           <button
             type="button"
             onClick={handleCancel}
-            className="px-6 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition"
+            className= "px-6 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300 transition"
+            className= "px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300 transition"
           >
             Submit
           </button>

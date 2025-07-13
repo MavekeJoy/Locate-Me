@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import missingBg from '../assets/missing-bg.jpg';
 import { FaCamera, FaSearchLocation, FaHeart } from 'react-icons/fa';
 
 const LandingPage = () => {
+  const [openCard, setOpenCard] = useState(null);
+
+  const handleCardClick = (index) => {
+    if (window.innerWidth < 768) {
+      setOpenCard(openCard === index ? null : index);
+    }
+  };
+
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       {/* Hero Section */}
@@ -10,14 +18,12 @@ const LandingPage = () => {
         <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-10">
           {/* Text Side */}
           <div className="md:w-1/2 text-center md:text-left">
-          <h1 className="text-5xl md:text-6xl mb-6 text-yellow-400 font-bebas tracking-widest">
-  LOCATE ME
-</h1>
-
-
+            <h1 className="text-5xl md:text-6xl mb-6 text-yellow-400 font-bebas tracking-widest">
+              LOCATE ME
+            </h1>
           </div>
 
-          {/* Image Side with slide animation and rounded */}
+          {/* Image Side */}
           <div className="md:w-1/2 animate-slide-in-right">
             <img
               src={missingBg}
@@ -42,44 +48,48 @@ const LandingPage = () => {
       <section className="bg-blue-950 py-20 px-6 md:px-12">
         <h2 className="text-3xl font-bold text-center mb-12 text-yellow-400">How It Works</h2>
         <div className="grid md:grid-cols-3 gap-10 text-center">
-          {/* Card 1 */}
-          <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-500 hover:shadow-yellow-400/60 hover:scale-105">
-            <div className="p-8 transition-transform duration-500 transform group-hover:-translate-y-full">
-              <FaCamera className="text-5xl text-yellow-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white">Post</h3>
+          {[
+            {
+              icon: <FaCamera className="text-5xl text-yellow-400 mx-auto mb-4" />,
+              title: 'Post',
+              color: 'hover:shadow-yellow-400/60',
+              desc: 'Submit details and up to 5 images of the missing individual — fast and free.',
+            },
+            {
+              icon: <FaSearchLocation className="text-5xl text-teal-400 mx-auto mb-4" />,
+              title: 'Spot',
+              color: 'hover:shadow-teal-400/60',
+              desc: 'Community members can report sightings and location updates instantly.',
+            },
+            {
+              icon: <FaHeart className="text-5xl text-pink-400 mx-auto mb-4" />,
+              title: 'Reunite',
+              color: 'hover:shadow-pink-400/60',
+              desc: 'We connect people and information to reunite families with loved ones.',
+            },
+          ].map((card, i) => (
+            <div
+              key={i}
+              className={`group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-500 ${card.color} hover:scale-105`}
+              onClick={() => handleCardClick(i)}
+            >
+              <div
+                className={`p-8 transition-transform duration-500 transform ${
+                  openCard === i ? '-translate-y-full' : ''
+                } group-hover:-translate-y-full`}
+              >
+                {card.icon}
+                <h3 className="text-xl font-bold text-white">{card.title}</h3>
+              </div>
+              <div
+                className={`absolute inset-0 p-6 bg-gray-900 flex items-center justify-center transition-opacity duration-500 ${
+                  openCard === i ? 'opacity-100' : 'opacity-0'
+                } group-hover:opacity-100`}
+              >
+                <p className="text-gray-200 text-sm">{card.desc}</p>
+              </div>
             </div>
-            <div className="absolute inset-0 p-6 bg-gray-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="text-gray-200 text-sm">
-                Submit details and up to 5 images of the missing individual — fast and free.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 2 */}
-          <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-500 hover:shadow-teal-400/60 hover:scale-105">
-            <div className="p-8 transition-transform duration-500 transform group-hover:-translate-y-full">
-              <FaSearchLocation className="text-5xl text-teal-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white">Spot</h3>
-            </div>
-            <div className="absolute inset-0 p-6 bg-gray-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="text-gray-200 text-sm">
-                Community members can report sightings and location updates instantly.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-500 hover:shadow-pink-400/60 hover:scale-105">
-            <div className="p-8 transition-transform duration-500 transform group-hover:-translate-y-full">
-              <FaHeart className="text-5xl text-pink-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white">Reunite</h3>
-            </div>
-            <div className="absolute inset-0 p-6 bg-gray-900 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <p className="text-gray-200 text-sm">
-                We connect people and information to reunite families with loved ones.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 

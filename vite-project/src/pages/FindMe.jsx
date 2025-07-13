@@ -28,9 +28,9 @@ const FindMe = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-24 px-6 md:px-16">
+    <div className= "min-h-screen bg-gray-900 text-white pt-14 px-6 md:px-16 py-10">
       
-      <h2 className="text-3xl font-bold text-yellow-400 mb-8 text-center">📍 Report a Sighting</h2>
+      <h2 className= "text-3xl font-bold text-yellow-400 mb-8 text-center">📍 Report a Sighting</h2>
 
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg space-y-6">
         <div>
@@ -122,22 +122,23 @@ const FindMe = () => {
           />
         </div>
 
-        {/* Buttons */}
-        <div className="flex gap-4 justify-end mt-6">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="px-6 py-2 bg-gray-600 hover:bg-gray-500 rounded text-white"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-semibold rounded"
-          >
-            Submit Report
-          </button>
-        </div>
+       {/* Buttons */}
+<div className= "flex justify-end gap-4 mt-6">
+  <button
+    type="button"
+    onClick={() => navigate(-1)}
+    className= "px-6 py-3 bg-gray-600 text-white rounded hover:bg-gray-500 transition"
+  >
+    Cancel
+  </button>
+  <button
+    type="submit"
+    className= "px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300 transition"
+  >
+    Submit 
+  </button>
+</div>
+
       </form>
     </div>
   );
