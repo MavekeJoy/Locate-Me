@@ -42,9 +42,11 @@ const Home = () => {
   const [genderFilter, setGenderFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [comments, setComments] = useState({});
+  const [replyingTo, setReplyingTo] = useState({});
 
-  const toggleCard = (id) => {
-    setOpenCardId(openCardId === id ? null : id);
+  const toggleCard = (id, forceOpen = false) => {
+    setOpenCardId(forceOpen ? id : openCardId === id ? null : id);
   };
 
   const clearFilters = () => {
@@ -72,21 +74,91 @@ const Home = () => {
     }
 
     result.sort((a, b) => {
-      if (sortOrder === 'newest') {
-        return new Date(b.date) - new Date(a.date);
-      } else {
-        return new Date(a.date) - new Date(b.date);
-      }
+      return sortOrder === 'newest'
+        ? new Date(b.date) - new Date(a.date)
+        : new Date(a.date) - new Date(b.date);
     });
 
     return result;
   }, [searchTerm, locationFilter, genderFilter, sortOrder]);
 
+  const handleCommentSubmit = (id, text, parentId = null) => {
+    if (!text.trim()) return;
+    setComments((prev) => {
+      const postComments = prev[id] || [];
+      const newComment = {
+        id: Date.now(),
+        text,
+        parentId,
+        timestamp: new Date(),
+      };
+      return {
+        ...prev,
+        [id]: [...postComments, newComment],
+      };
+    });
+  };
+
+  const handleDeleteComment = (postId, commentId) => {
+    setComments((prev) => {
+      return {
+        ...prev,
+        [postId]: prev[postId].filter(
+          (c) => c.id !== commentId && c.parentId !== commentId
+        ),
+      };
+    });
+  };
+
+  const renderComments = (postId, parentId = null) => {
+    const postComments = comments[postId] || [];
+    return postComments
+      .filter((c) => c.parentId === parentId)
+      .map((c) => (
+        <div key={c.id} className="mt-2 ml-4 border-l border-yellow-500 pl-2">
+          <p className="text-sm text-white">{c.text}</p>
+          <div className="flex gap-2 text-xs mt-1">
+            <button
+              className="text-yellow-400 hover:underline"
+              onClick={() => setReplyingTo({ postId, parentId: c.id })}
+            >
+              Reply
+            </button>
+            <button
+              className="text-red-400 hover:underline"
+              onClick={() => handleDeleteComment(postId, c.id)}
+            >
+              Delete
+            </button>
+          </div>
+          {replyingTo.postId === postId && replyingTo.parentId === c.id && (
+            <div className="mt-2">
+              <input
+                type="text"
+                placeholder="Write a reply..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleCommentSubmit(postId, e.target.value, c.id);
+                    e.target.value = '';
+                    setReplyingTo({});
+                  }
+                }}
+                className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
+              />
+            </div>
+          )}
+          {renderComments(postId, c.id)}
+        </div>
+      ));
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white pt-24 px-4 md:px-16 pb-10">
-      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">Reported Missing People</h2>
+      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">
+        Reported Missing People
+      </h2>
 
-      {/* Filter Toggle Button for Mobile */}
+      {/* Filters */}
       <div className="md:hidden mb-4 flex justify-between items-center">
         <button
           onClick={() => setFiltersVisible(!filtersVisible)}
@@ -96,13 +168,12 @@ const Home = () => {
         </button>
         <button
           onClick={clearFilters}
-          className=  "ml-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+          className="ml-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
         >
           Clear Filters
         </button>
       </div>
 
-      {/* Filters */}
       {(filtersVisible || window.innerWidth >= 768) && (
         <div className="bg-gray-800 p-4 rounded-lg mb-8 grid md:grid-cols-5 gap-4 text-sm">
           <input
@@ -147,56 +218,82 @@ const Home = () => {
 
       {/* Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredPosts.length === 0 ? (
-          <p className="text-center text-gray-400 col-span-full">No results found.</p>
-        ) : (
-          filteredPosts.map((person) => (
-            <div
-              key={person.id}
+        {filteredPosts.map((person) => (
+          <div
+            key={person.id}
+            className="bg-gray-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:scale-[1.01]"
+          >
+            <img
+              src={person.photos[0]}
+              alt={person.name}
+              className="w-full h-64 object-cover rounded-t"
               onClick={() => toggleCard(person.id)}
-              className="cursor-pointer bg-gray-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:scale-[1.01]"
+            />
+            <div className="p-4">
+              <h3 className="text-xl font-bold mb-1">{person.name}</h3>
+              <p className="text-sm text-gray-400">Last Seen: {person.location}</p>
+              <p className="text-xs text-yellow-400">📅 Posted: {person.date}</p>
+            </div>
+
+            <div
+              className={`transition-all duration-300 px-4 pb-4 ${
+                openCardId === person.id ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+              } overflow-hidden`}
             >
-              <img
-                src={person.photos[0]}
-                alt={person.name}
-                className="w-full h-64 object-cover rounded-t"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-bold mb-1">{person.name}</h3>
-                <p className="text-sm text-gray-400">Last Seen: {person.location}</p>
-                <p className="text-xs text-yellow-400">📅 Posted: {person.date}</p>
-              </div>
+              <div className="space-y-2 text-sm text-gray-300">
+                <p>
+                  <span className="font-semibold text-yellow-300">Age:</span> {person.age}
+                </p>
+                <p>
+                  <span className="font-semibold text-yellow-300">Gender:</span> {person.gender}
+                </p>
+                <p>
+                  <span className="font-semibold text-yellow-300">Residence:</span> {person.residence}
+                </p>
+                <p>
+                  <span className="font-semibold text-yellow-300">Workplace:</span> {person.workplace}
+                </p>
+                <p>
+                  <span className="font-semibold text-yellow-300">Reason:</span> {person.reason}
+                </p>
+                <p>
+                  <span className="font-semibold text-yellow-300">Contact:</span> {person.contact}
+                </p>
 
-              <div
-                className={`transition-all duration-300 ease-in-out px-4 pb-4 ${
-                  openCardId === person.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-                } overflow-hidden`}
-              >
-                <div className="space-y-2 text-sm text-gray-300">
-                  <p><span className="font-semibold text-yellow-300">Age:</span> {person.age}</p>
-                  <p><span className="font-semibold text-yellow-300">Gender:</span> {person.gender}</p>
-                  <p><span className="font-semibold text-yellow-300">Residence:</span> {person.residence}</p>
-                  <p><span className="font-semibold text-yellow-300">Workplace:</span> {person.workplace}</p>
-                  <p><span className="font-semibold text-yellow-300">Reason:</span> {person.reason}</p>
-                  <p><span className="font-semibold text-yellow-300">Contact:</span> {person.contact}</p>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {person.photos.slice(1).map((url, i) =>
+                    url ? (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`Extra ${i + 1}`}
+                        className="w-full h-32 object-cover rounded"
+                      />
+                    ) : null
+                  )}
+                </div>
 
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    {person.photos.slice(1).map((url, i) =>
-                      url ? (
-                        <img
-                          key={i}
-                          src={url}
-                          alt={`Extra ${i + 1}`}
-                          className="w-full h-32 object-cover rounded"
-                        />
-                      ) : null
-                    )}
-                  </div>
+                {/* Comments */}
+                <div className="mt-4">
+                  <h4 className="text-yellow-400 font-semibold mb-2">Comments</h4>
+                  {renderComments(person.id)}
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    onFocus={() => toggleCard(person.id, true)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCommentSubmit(person.id, e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="w-full mt-2 p-2 rounded bg-gray-700 text-white"
+                  />
                 </div>
               </div>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );
