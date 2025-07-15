@@ -153,7 +153,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-24 px-4 md:px-16 pb-10">
+    <div className="min-h-screen bg-gray-900 text-white pt-4 px-4 md:px-16 pb-2">
       <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">
         Reported Missing People
       </h2>

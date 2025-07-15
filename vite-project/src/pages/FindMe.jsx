@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const FindMe = () => {
@@ -28,9 +27,9 @@ const FindMe = () => {
   };
 
   return (
-    <div className= "min-h-screen bg-gray-900 text-white pt-14 px-6 md:px-16 py-10">
+    <div className= "min-h-screen bg-gray-900 text-white pt-5 pb-2 px-6 md:px-16 py-10">
       
-      <h2 className= "text-3xl font-bold text-yellow-400 mb-8 text-center">📍 Report a Sighting</h2>
+      <h2 className= "text-3xl font-bold text-yellow-400 mb-8 text-center"> Report a Sighting</h2>
 
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg space-y-6">
         <div>

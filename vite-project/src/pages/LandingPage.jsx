@@ -94,8 +94,8 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="text-center py-6 text-sm text-gray-500 bg-gray-900">
-        © {new Date().getFullYear()} Locate Me. Built with purpose.
+      <footer className="text-center py-14 pt-4 text-sm text-gray-500 bg-gray-900">
+        © {new Date().getFullYear()} Locate Me. *Every Name Deserves A Way Home*.
       </footer>
     </div>
   );

@@ -10,7 +10,7 @@ const Navbar = () => {
   const navLink = (path, label) => (
     <Link
       to={path}
-      onClick={() => setMenuOpen(false)} // close menu on click
+      onClick={() => setMenuOpen(false)}
       className={`block md:inline px-3 py-2 rounded-full transition font-medium ${
         location.pathname === path
           ? 'bg-yellow-400 text-gray-900'
@@ -39,15 +39,11 @@ const Navbar = () => {
           {navLink('/find', 'Find Me')}
           {navLink('/post', 'Post Me')}
           {navLink('/settings', 'Settings')}
-          <Link
-            to="/signin"
-            className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition"
-          >
-            Sign In
-          </Link>
+          {navLink('/support', 'Support')}
+         
         </div>
 
-        {/* Hamburger Button for Mobile */}
+        {/* Hamburger Button */}
         <div className="md:hidden">
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -55,13 +51,14 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-4 px-6 pb-4">
           {navLink('/home', 'Home')}
           {navLink('/find', 'Find Me')}
           {navLink('/post', 'Post Me')}
           {navLink('/settings', 'Settings')}
+          {navLink('/support', 'Support')}
           <Link
             to="/signin"
             onClick={() => setMenuOpen(false)}

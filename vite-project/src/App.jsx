@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import FindMe from './pages/FindMe';
 import PostMe from './pages/PostMe';
-import SignIn from './pages/SignIn';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import MobileBottomNav  from './components/MobileBottomNav';
+import Support from './pages/Support';
 function App() {
   return (
     <Router>
@@ -18,9 +18,9 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/find" element={<FindMe />} />
         <Route path="/post" element={<PostMe />} />
-        <Route path="/signin" element={<SignIn />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
       <MobileBottomNav />
       </div>
