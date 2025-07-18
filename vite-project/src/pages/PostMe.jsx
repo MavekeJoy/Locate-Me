@@ -11,12 +11,21 @@ const PostMe = () => {
     residence: '',
     workplace: '',
     contact: '',
-    isContactPublic: true, // NEW
+    useHotline: false, // NEW
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+
+    if (name === 'useHotline') {
+      setFormData((prev) => ({
+        ...prev,
+        useHotline: checked,
+        contact: checked ? '0700000000' : '',
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePhotoChange = (e, index) => {
@@ -24,13 +33,6 @@ const PostMe = () => {
     const updatedPhotos = [...formData.photos];
     updatedPhotos[index] = file;
     setFormData({ ...formData, photos: updatedPhotos });
-  };
-
-  const toggleContactVisibility = () => {
-    setFormData((prev) => ({
-      ...prev,
-      isContactPublic: !prev.isContactPublic,
-    }));
   };
 
   const handleSubmit = (e) => {
@@ -51,13 +53,13 @@ const PostMe = () => {
       residence: '',
       workplace: '',
       contact: '',
-      isContactPublic: true,
+      useHotline: false,
     });
   };
 
   return (
     <div className="min-h-screen bg-theme text-theme py-10 px-6 md:px-16 pb-2">
-      <h2 className="text-4xl font-bold text-yellow-400 mb-2  text-center">Post Missing Person</h2>
+      <h2 className="text-4xl font-bold text-yellow-400 mb-2 text-center">Post Missing Person</h2>
       <form
         onSubmit={handleSubmit}
         className="max-w-4xl mx-auto card-theme p-8 rounded-lg shadow-lg space-y-6"
@@ -121,7 +123,7 @@ const PostMe = () => {
           </div>
         ))}
 
-        {/* Reason for Disappearance */}
+        {/* Reason */}
         <div>
           <label className="block mb-1 font-semibold">Reason for Disappearance</label>
           <textarea
@@ -159,7 +161,7 @@ const PostMe = () => {
           />
         </div>
 
-        {/* Workplace / School */}
+        {/* Workplace */}
         <div>
           <label className="block mb-1 font-semibold">Workplace / School</label>
           <input
@@ -179,33 +181,22 @@ const PostMe = () => {
             name="contact"
             value={formData.contact}
             onChange={handleChange}
-            className="w-full p-3 bg-gray-700 text-white rounded"
-            placeholder="Phone or Email"
+            disabled={formData.useHotline}
             required
+            className={`w-full p-3 bg-gray-700 text-white rounded ${
+              formData.useHotline ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            placeholder="Phone or Email"
           />
-        </div>
-
-        {/* Contact Visibility Toggle */}
-        <div className="flex items-center justify-between text-sm text-gray-300">
-          <span>Make contact info public?</span>
-          <label className="inline-flex items-center cursor-pointer">
+          <label className="mt-2 block text-sm">
             <input
               type="checkbox"
-              className="sr-only"
-              checked={formData.isContactPublic}
-              onChange={toggleContactVisibility}
+              name="useHotline"
+              checked={formData.useHotline}
+              onChange={handleChange}
+              className="mr-2"
             />
-            <div
-              className={`w-10 h-6 bg-gray-600 rounded-full p-1 transition ${
-                formData.isContactPublic ? 'bg-yellow-400' : ''
-              }`}
-            >
-              <div
-                className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                  formData.isContactPublic ? 'translate-x-4' : ''
-                }`}
-              ></div>
-            </div>
+            Use hotline instead (0700000000)
           </label>
         </div>
 

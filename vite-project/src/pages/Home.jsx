@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { FaTimes } from 'react-icons/fa';
 
 const dummyPosts = [
   {
@@ -37,6 +38,7 @@ const dummyPosts = [
 
 const Home = () => {
   const [openCardId, setOpenCardId] = useState(null);
+  const [modalPerson, setModalPerson] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [genderFilter, setGenderFilter] = useState('');
@@ -58,27 +60,12 @@ const Home = () => {
 
   const filteredPosts = useMemo(() => {
     let result = [...dummyPosts];
-
-    if (searchTerm) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    if (locationFilter) {
-      result = result.filter((p) =>
-        p.location.toLowerCase().includes(locationFilter.toLowerCase())
-      );
-    }
-    if (genderFilter) {
-      result = result.filter((p) => p.gender === genderFilter);
-    }
-
-    result.sort((a, b) => {
-      return sortOrder === 'newest'
-        ? new Date(b.date) - new Date(a.date)
-        : new Date(a.date) - new Date(b.date);
-    });
-
+    if (searchTerm) result = result.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    if (locationFilter) result = result.filter((p) => p.location.toLowerCase().includes(locationFilter.toLowerCase()));
+    if (genderFilter) result = result.filter((p) => p.gender === genderFilter);
+    result.sort((a, b) =>
+      sortOrder === 'newest' ? new Date(b.date) - new Date(a.date) : new Date(a.date) - new Date(b.date)
+    );
     return result;
   }, [searchTerm, locationFilter, genderFilter, sortOrder]);
 
@@ -92,22 +79,15 @@ const Home = () => {
         parentId,
         timestamp: new Date(),
       };
-      return {
-        ...prev,
-        [id]: [...postComments, newComment],
-      };
+      return { ...prev, [id]: [...postComments, newComment] };
     });
   };
 
   const handleDeleteComment = (postId, commentId) => {
-    setComments((prev) => {
-      return {
-        ...prev,
-        [postId]: prev[postId].filter(
-          (c) => c.id !== commentId && c.parentId !== commentId
-        ),
-      };
-    });
+    setComments((prev) => ({
+      ...prev,
+      [postId]: prev[postId].filter((c) => c.id !== commentId && c.parentId !== commentId),
+    }));
   };
 
   const renderComments = (postId, parentId = null) => {
@@ -153,10 +133,8 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-4 px-4 md:px-16 pb-2">
-      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">
-        Reported Missing People
-      </h2>
+    <div className="min-h-screen bg-gray-900 text-white pt-4 px-4 md:px-16 pb-8">
+      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">Reported Missing People</h2>
 
       {/* Filters */}
       <div className="md:hidden mb-4 flex justify-between items-center">
@@ -166,10 +144,7 @@ const Home = () => {
         >
           {filtersVisible ? 'Hide Filters' : 'Show Filters'}
         </button>
-        <button
-          onClick={clearFilters}
-          className="ml-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
-        >
+        <button onClick={clearFilters} className="ml-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600">
           Clear Filters
         </button>
       </div>
@@ -207,10 +182,7 @@ const Home = () => {
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
           </select>
-          <button
-            onClick={clearFilters}
-            className="hidden md:block px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
-          >
+          <button className="hidden md:block px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600" onClick={clearFilters}>
             Clear Filters
           </button>
         </div>
@@ -219,82 +191,60 @@ const Home = () => {
       {/* Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredPosts.map((person) => (
-          <div
-            key={person.id}
-            className="bg-gray-800 rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:scale-[1.01]"
-          >
+          <div key={person.id} className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:scale-[1.01] transition">
             <img
               src={person.photos[0]}
               alt={person.name}
-              className="w-full h-64 object-cover rounded-t"
-              onClick={() => toggleCard(person.id)}
+              className="w-full h-64 object-cover rounded-t cursor-pointer"
+              onClick={() => setModalPerson(person)}
             />
             <div className="p-4">
               <h3 className="text-xl font-bold mb-1">{person.name}</h3>
               <p className="text-sm text-gray-400">Last Seen: {person.location}</p>
               <p className="text-xs text-yellow-400">📅 Posted: {person.date}</p>
             </div>
-
-            <div
-              className={`transition-all duration-300 px-4 pb-4 ${
-                openCardId === person.id ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-              } overflow-hidden`}
-            >
-              <div className="space-y-2 text-sm text-gray-300">
-                <p>
-                  <span className="font-semibold text-yellow-300">Age:</span> {person.age}
-                </p>
-                <p>
-                  <span className="font-semibold text-yellow-300">Gender:</span> {person.gender}
-                </p>
-                <p>
-                  <span className="font-semibold text-yellow-300">Residence:</span> {person.residence}
-                </p>
-                <p>
-                  <span className="font-semibold text-yellow-300">Workplace:</span> {person.workplace}
-                </p>
-                <p>
-                  <span className="font-semibold text-yellow-300">Reason:</span> {person.reason}
-                </p>
-                <p>
-                  <span className="font-semibold text-yellow-300">Contact:</span> {person.contact}
-                </p>
-
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  {person.photos.slice(1).map((url, i) =>
-                    url ? (
-                      <img
-                        key={i}
-                        src={url}
-                        alt={`Extra ${i + 1}`}
-                        className="w-full h-32 object-cover rounded"
-                      />
-                    ) : null
-                  )}
-                </div>
-
-                {/* Comments */}
-                <div className="mt-4">
-                  <h4 className="text-yellow-400 font-semibold mb-2">Comments</h4>
-                  {renderComments(person.id)}
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    onFocus={() => toggleCard(person.id, true)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleCommentSubmit(person.id, e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                    className="w-full mt-2 p-2 rounded bg-gray-700 text-white"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         ))}
       </div>
+
+      {/* Modal with full profile */}
+      {modalPerson && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-2xl relative p-6">
+            <button onClick={() => setModalPerson(null)} className="absolute top-3 right-3 text-white hover:text-red-400 text-xl">
+              <FaTimes />
+            </button>
+
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <img src={modalPerson.photos[0]} alt={modalPerson.name} className="w-full md:w-1/2 h-60 object-cover rounded-lg" />
+              <div className="flex-1 space-y-1 text-sm md:text-base">
+                <h2 className="text-xl font-bold text-yellow-400">{modalPerson.name}</h2>
+                <p><strong>Age:</strong> {modalPerson.age}</p>
+                <p><strong>Gender:</strong> {modalPerson.gender}</p>
+                <p><strong>Residence:</strong> {modalPerson.residence}</p>
+                <p><strong>Workplace:</strong> {modalPerson.workplace}</p>
+                <p><strong>Last Seen:</strong> {modalPerson.location}</p>
+                <p><strong>Date Posted:</strong> {modalPerson.date}</p>
+                <p><strong>Contact:</strong> {modalPerson.contact}</p>
+                <p><strong>Reason:</strong> {modalPerson.reason}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 mt-4">
+              {modalPerson.photos.slice(1).map((url, i) =>
+                url && (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`Extra ${i + 2}`}
+                    className="w-full h-32 object-cover rounded-lg"
+                  />
+                )
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

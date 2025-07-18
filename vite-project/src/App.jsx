@@ -1,29 +1,56 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import FindMe from './pages/FindMe';
 import PostMe from './pages/PostMe';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
-import MobileBottomNav  from './components/MobileBottomNav';
+import MobileBottomNav from './components/MobileBottomNav';
 import Support from './pages/Support';
+
+// Admin Pages & Layout
+import AdminLayout from './layouts/AdminLayout';
+import AdminSubmissions from './pages/admin/AdminSubmissions';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminSettings from './pages/admin/AdminSettings';
+
+const AppContent = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  return (
+    <>
+      {!isAdmin && <Navbar />}
+      <div className={!isAdmin ? 'pt-10' : ''}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/find" element={<FindMe />} />
+          <Route path="/post" element={<PostMe />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/support" element={<Support />} />
+
+          {/* Admin Routes with layout */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminSubmissions />} />
+            <Route path="submissions" element={<AdminSubmissions />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+        </Routes>
+      </div>
+      {!isAdmin && <MobileBottomNav />}
+    </>
+  );
+};
+
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div className= "pt-10">
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/find" element={<FindMe />} />
-        <Route path="/post" element={<PostMe />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/support" element={<Support />} />
-      </Routes>
-      <MobileBottomNav />
-      </div>
+      <AppContent />
     </Router>
   );
 }
