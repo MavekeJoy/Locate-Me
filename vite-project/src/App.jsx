@@ -23,6 +23,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSubmissions from './pages/admin/AdminSubmissions';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
+import AdminNotifications from './pages/admin/AdminNotifications';
 
 const AppContent = () => {
   const location = useLocation();
@@ -47,6 +48,7 @@ const AppContent = () => {
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="notifications" element={<AdminNotifications />} />
           </Route>
         </Routes>
       </div>
