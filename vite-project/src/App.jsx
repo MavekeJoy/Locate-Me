@@ -1,6 +1,13 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Outlet,
+} from 'react-router-dom';
+
 import LandingPage from './pages/LandingPage';
 import FindMe from './pages/FindMe';
 import PostMe from './pages/PostMe';
@@ -12,6 +19,7 @@ import Support from './pages/Support';
 
 // Admin Pages & Layout
 import AdminLayout from './layouts/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSubmissions from './pages/admin/AdminSubmissions';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
@@ -35,7 +43,7 @@ const AppContent = () => {
 
           {/* Admin Routes with layout */}
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminSubmissions />} />
+            <Route index element={<AdminDashboard />} />
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="settings" element={<AdminSettings />} />
