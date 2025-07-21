@@ -24,6 +24,7 @@ import AdminSubmissions from './pages/admin/AdminSubmissions';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminProfile from './pages/admin/AdminProfile';
 
 const AppContent = () => {
   const location = useLocation();
@@ -49,6 +50,7 @@ const AppContent = () => {
             <Route path="users" element={<AdminUsers />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="notifications" element={<AdminNotifications />} />
+            <Route path="profile" element={<AdminProfile></AdminProfile>} />
           </Route>
         </Routes>
       </div>

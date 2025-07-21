@@ -1,13 +1,107 @@
-import React from 'react';
+// src/pages/admin/AdminSubmissions.jsx
+import React, { useState } from 'react';
+
+const mockSubmissions = [
+  {
+    id: 1,
+    name: 'John Doe',
+    type: 'Post Me',
+    date: '2025-07-10',
+    location: 'Nairobi CBD',
+    status: 'Pending',
+    image: 'https://via.placeholder.com/80',
+  },
+  {
+    id: 2,
+    name: 'Unknown',
+    type: 'Find Me',
+    date: '2025-07-11',
+    location: 'Westlands',
+    status: 'Verified',
+    image: 'https://via.placeholder.com/80',
+  },
+];
 
 const AdminSubmissions = () => {
-    return (
-      <div>
-        <h2>Admin Settings</h2>
-        {/* Your settings content */}
+  const [search, setSearch] = useState('');
+
+  const filtered = mockSubmissions.filter((s) =>
+    s.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="bg-gray-900 min-h-screen text-white px-6 py-8 md:pl-64">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+        <h2 className="text-2xl font-bold text-yellow-400">Submissions</h2>
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-gray-700 px-4 py-2 rounded text-white w-full sm:w-64"
+        />
       </div>
-    );
-  };
-  
-  export default AdminSubmissions;
-  
+
+      {/* Table for desktop */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full bg-gray-800 rounded shadow-lg overflow-hidden">
+          <thead>
+            <tr className="bg-gray-700 text-yellow-300 text-left text-sm">
+              <th className="p-3">Image</th>
+              <th className="p-3">Name</th>
+              <th className="p-3">Type</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Location</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((submission) => (
+              <tr key={submission.id} className="border-t border-gray-700 text-sm">
+                <td className="p-3">
+                  <img src={submission.image} alt="" className="w-12 h-12 rounded" />
+                </td>
+                <td className="p-3">{submission.name}</td>
+                <td className="p-3">{submission.type}</td>
+                <td className="p-3">{submission.date}</td>
+                <td className="p-3">{submission.location}</td>
+                <td className="p-3 text-yellow-300">{submission.status}</td>
+                <td className="p-3 space-x-2">
+                  <button className="text-xs px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-300">View</button>
+                  <button className="text-xs px-3 py-1 bg-green-500 text-white rounded hover:bg-green-400">Mark Resolved</button>
+                  <button className="text-xs px-3 py-1 bg-red-500 text-white rounded hover:bg-red-400">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Cards for mobile */}
+      <div className="md:hidden space-y-4">
+        {filtered.map((submission) => (
+          <div key={submission.id} className="bg-gray-800 p-4 rounded shadow-lg">
+            <div className="flex items-center gap-4 mb-2">
+              <img src={submission.image} alt="" className="w-14 h-14 rounded" />
+              <div>
+                <h3 className="text-lg font-semibold text-yellow-300">{submission.name}</h3>
+                <p className="text-xs text-gray-400">{submission.type} • {submission.date}</p>
+              </div>
+            </div>
+            <p className="text-sm"><span className="text-gray-400">Location:</span> {submission.location}</p>
+            <p className="text-sm text-yellow-400 mt-1">Status: {submission.status}</p>
+            <div className="flex gap-2 mt-3">
+              <button className="flex-1 px-3 py-1 bg-yellow-400 text-gray-900 rounded text-xs">View</button>
+              <button className="flex-1 px-3 py-1 bg-green-500 text-white rounded text-xs">Mark Resolved</button>
+              <button className="flex-1 px-3 py-1 bg-red-500 text-white rounded text-xs">Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AdminSubmissions;
