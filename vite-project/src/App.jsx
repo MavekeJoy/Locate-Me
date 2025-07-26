@@ -5,7 +5,6 @@ import {
   Routes,
   Route,
   useLocation,
-  Outlet,
 } from 'react-router-dom';
 
 import LandingPage from './pages/LandingPage';
@@ -16,6 +15,9 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import Support from './pages/Support';
+import SignInPage from './pages/SignInPage';
+import PrivateRoute from './components/PrivateRoute';
+import Login from './pages/LoginIn';
 
 // Admin Pages & Layout
 import AdminLayout from './layouts/AdminLayout';
@@ -35,22 +37,63 @@ const AppContent = () => {
       {!isAdmin && <Navbar />}
       <div className={!isAdmin ? 'pt-10' : ''}>
         <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/find" element={<FindMe />} />
-          <Route path="/post" element={<PostMe />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/support" element={<Support />} />
+          {/* Login first */}
+          <Route path="/" element={<Login />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/landing" element={<LandingPage />} />
 
-          {/* Admin Routes with layout */}
-          <Route path="/admin" element={<AdminLayout />}>
+          {/* Publicly available */}
+          <Route path="/find" element={<FindMe />} />
+
+          {/* Protected routes (after login) */}
+          <Route
+            path="/post"
+            element={
+              <PrivateRoute>
+                <PostMe />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <PrivateRoute>
+                <Support />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Admin routes */}
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute role="admin">
+                <AdminLayout />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<AdminDashboard />} />
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="notifications" element={<AdminNotifications />} />
-            <Route path="profile" element={<AdminProfile></AdminProfile>} />
+            <Route path="profile" element={<AdminProfile />} />
           </Route>
         </Routes>
       </div>

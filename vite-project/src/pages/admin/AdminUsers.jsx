@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import SuspendModal from '../../components/admin/SuspendModal';
-import ViewUserModal from '../../components/admin/ViewUsersModal';
+import UserModal from '../../components/admin/UserModal';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([
@@ -36,16 +35,20 @@ const AdminUsers = () => {
     },
   ]);
 
-  const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const [modalType, setModalType] = useState(null); // 'view' | 'suspend' | 'delete'
   const [selectedUser, setSelectedUser] = useState(null);
-  const [viewUser, setViewUser] = useState(null); // New for view modal
+
+  const handleView = (user) => {
+    setSelectedUser(user);
+    setModalType('view');
+  };
 
   const handleToggleStatus = (user) => {
     if (user.status === 'Active') {
       setSelectedUser(user);
-      setShowSuspendModal(true);
+      setModalType('suspend');
     } else {
-      // Activate
+      // Reactivate
       setUsers((prev) =>
         prev.map((u) =>
           u.id === user.id ? { ...u, status: 'Active', suspendReason: '' } : u
@@ -62,19 +65,19 @@ const AdminUsers = () => {
           : u
       )
     );
-    setShowSuspendModal(false);
     setSelectedUser(null);
+    setModalType(null);
   };
 
-  const handleDelete = (id) => {
-    const confirmed = window.confirm('Are you sure you want to delete this user?');
-    if (confirmed) {
-      setUsers((prev) => prev.filter((user) => user.id !== id));
-    }
+  const handleDelete = (user) => {
+    setSelectedUser(user);
+    setModalType('delete');
   };
 
-  const handleView = (user) => {
-    setViewUser(user); // Open modal
+  const handleConfirmDelete = () => {
+    setUsers((prev) => prev.filter((u) => u.id !== selectedUser.id));
+    setSelectedUser(null);
+    setModalType(null);
   };
 
   return (
@@ -141,7 +144,7 @@ const AdminUsers = () => {
                     {user.status === 'Active' ? 'Suspend' : 'Activate'}
                   </button>
                   <button
-                    onClick={() => handleDelete(user.id)}
+                    onClick={() => handleDelete(user)}
                     className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs"
                   >
                     Delete
@@ -153,19 +156,22 @@ const AdminUsers = () => {
         </table>
       </div>
 
-      {/* Suspend Reason Modal */}
-      <SuspendModal
-        show={showSuspendModal}
-        onClose={() => setShowSuspendModal(false)}
-        onSubmit={handleSuspendConfirm}
-        userName={selectedUser?.name}
-      />
-
-      {/* View User Modal */}
-      <ViewUserModal
-        show={!!viewUser}
-        onClose={() => setViewUser(null)}
-        user={viewUser}
+      {/* Reusable Modal for All Actions */}
+      <UserModal
+        show={!!modalType}
+        type={modalType}
+        user={selectedUser}
+        onClose={() => {
+          setModalType(null);
+          setSelectedUser(null);
+        }}
+        onSubmit={
+          modalType === 'suspend'
+            ? handleSuspendConfirm
+            : modalType === 'delete'
+            ? handleConfirmDelete
+            : () => {}
+        }
       />
     </div>
   );

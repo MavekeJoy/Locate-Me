@@ -11,8 +11,10 @@ const PostMe = () => {
     residence: '',
     workplace: '',
     contact: '',
-    useHotline: false, // NEW
+    useHotline: false,
   });
+
+  const [photoPreviews, setPhotoPreviews] = useState([null, null, null, null, null]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,12 +33,25 @@ const PostMe = () => {
   const handlePhotoChange = (e, index) => {
     const file = e.target.files[0];
     const updatedPhotos = [...formData.photos];
+    const updatedPreviews = [...photoPreviews];
+
     updatedPhotos[index] = file;
+    updatedPreviews[index] = file ? URL.createObjectURL(file) : null;
+
     setFormData({ ...formData, photos: updatedPhotos });
+    setPhotoPreviews(updatedPreviews);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const mandatoryPhotosFilled = formData.photos.slice(0, 3).every((file) => file !== null);
+
+    if (!mandatoryPhotosFilled) {
+      alert('Please upload at least the first 3 photos.');
+      return;
+    }
+
     console.log('Submitted data:', formData);
     alert('Missing person posted successfully!');
     // Upload logic to backend or Firebase goes here
@@ -55,6 +70,7 @@ const PostMe = () => {
       contact: '',
       useHotline: false,
     });
+    setPhotoPreviews([null, null, null, null, null]);
   };
 
   return (
@@ -106,19 +122,27 @@ const PostMe = () => {
           </select>
         </div>
 
-        {/* File Uploads */}
+        {/* File Uploads with Previews */}
         {[0, 1, 2, 3, 4].map((index) => (
           <div key={index}>
-            <label className="block mb-1 font-semibold">Upload Photo {index + 1}</label>
+            <label className="block mb-1 font-semibold">
+              Upload Photo {index + 1}{' '}
+              {index < 3 && <span className="text-red-400">*</span>}
+            </label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => handlePhotoChange(e, index)}
               className="w-full p-3 bg-gray-700 text-white rounded"
-              required={index === 0}
             />
-            {formData.photos[index] && (
-              <p className="text-sm text-gray-400 mt-1">{formData.photos[index].name}</p>
+            {photoPreviews[index] && (
+              <div className="mt-2">
+                <img
+                  src={photoPreviews[index]}
+                  alt={`Preview ${index + 1}`}
+                  className="h-32 rounded shadow border"
+                />
+              </div>
             )}
           </div>
         ))}

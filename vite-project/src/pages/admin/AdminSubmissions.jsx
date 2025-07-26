@@ -1,5 +1,5 @@
-// src/pages/admin/AdminSubmissions.jsx
 import React, { useState } from 'react';
+import SubmissionModal from '../../components/admin/SubmissionModal';
 
 const mockSubmissions = [
   {
@@ -24,8 +24,38 @@ const mockSubmissions = [
 
 const AdminSubmissions = () => {
   const [search, setSearch] = useState('');
+  const [submissions, setSubmissions] = useState(mockSubmissions);
+  const [modalType, setModalType] = useState(null); // 'view' | 'resolve' | 'delete'
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
 
-  const filtered = mockSubmissions.filter((s) =>
+  const openModal = (type, submission) => {
+    setModalType(type);
+    setSelectedSubmission(submission);
+  };
+
+  const closeModal = () => {
+    setModalType(null);
+    setSelectedSubmission(null);
+  };
+
+  const handleConfirm = () => {
+    if (modalType === 'resolve') {
+      setSubmissions((prev) =>
+        prev.map((sub) =>
+          sub.id === selectedSubmission.id
+            ? { ...sub, status: 'Resolved' }
+            : sub
+        )
+      );
+    } else if (modalType === 'delete') {
+      setSubmissions((prev) =>
+        prev.filter((sub) => sub.id !== selectedSubmission.id)
+      );
+    }
+    closeModal();
+  };
+
+  const filtered = submissions.filter((s) =>
     s.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -69,9 +99,24 @@ const AdminSubmissions = () => {
                 <td className="p-3">{submission.location}</td>
                 <td className="p-3 text-yellow-300">{submission.status}</td>
                 <td className="p-3 space-x-2">
-                  <button className="text-xs px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-300">View</button>
-                  <button className="text-xs px-3 py-1 bg-green-500 text-white rounded hover:bg-green-400">Mark Resolved</button>
-                  <button className="text-xs px-3 py-1 bg-red-500 text-white rounded hover:bg-red-400">Delete</button>
+                  <button
+                    onClick={() => openModal('view', submission)}
+                    className="text-xs px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-300"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => openModal('resolve', submission)}
+                    className="text-xs px-3 py-1 bg-green-500 text-white rounded hover:bg-green-400"
+                  >
+                    Mark Resolved
+                  </button>
+                  <button
+                    onClick={() => openModal('delete', submission)}
+                    className="text-xs px-3 py-1 bg-red-500 text-white rounded hover:bg-red-400"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -93,13 +138,37 @@ const AdminSubmissions = () => {
             <p className="text-sm"><span className="text-gray-400">Location:</span> {submission.location}</p>
             <p className="text-sm text-yellow-400 mt-1">Status: {submission.status}</p>
             <div className="flex gap-2 mt-3">
-              <button className="flex-1 px-3 py-1 bg-yellow-400 text-gray-900 rounded text-xs">View</button>
-              <button className="flex-1 px-3 py-1 bg-green-500 text-white rounded text-xs">Mark Resolved</button>
-              <button className="flex-1 px-3 py-1 bg-red-500 text-white rounded text-xs">Delete</button>
+              <button
+                onClick={() => openModal('view', submission)}
+                className="flex-1 px-3 py-1 bg-yellow-400 text-gray-900 rounded text-xs"
+              >
+                View
+              </button>
+              <button
+                onClick={() => openModal('resolve', submission)}
+                className="flex-1 px-3 py-1 bg-green-500 text-white rounded text-xs"
+              >
+                Mark Resolved
+              </button>
+              <button
+                onClick={() => openModal('delete', submission)}
+                className="flex-1 px-3 py-1 bg-red-500 text-white rounded text-xs"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Modal */}
+      <SubmissionModal
+        show={!!modalType}
+        type={modalType}
+        submission={selectedSubmission}
+        onClose={closeModal}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

@@ -1,11 +1,14 @@
 // src/components/Navbar.jsx
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaMapMarkerAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import logo from '../assets/Logo.png';
 
 const Navbar = () => {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const navLink = (path, label) => (
     <Link
@@ -23,14 +26,20 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-900/90 backdrop-blur shadow-md text-white fixed top-0 w-full z-50">
-      <div className="flex justify-between items-center px-6 py-4">
+      <div className="flex justify-between items-center px-6 py-3">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"
+          className="flex items-center gap-3 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"
         >
-          <FaMapMarkerAlt />
-          <span>Locate Me</span>
+          <div className="w-14 h-14 bg-white rounded-full p-1 shadow-lg">
+            <img
+              src={logo}
+              alt="Locate Me Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+         
         </Link>
 
         {/* Desktop Links */}
@@ -40,7 +49,6 @@ const Navbar = () => {
           {navLink('/post', 'Post Me')}
           {navLink('/settings', 'Settings')}
           {navLink('/support', 'Support')}
-         
         </div>
 
         {/* Hamburger Button */}
@@ -59,13 +67,6 @@ const Navbar = () => {
           {navLink('/post', 'Post Me')}
           {navLink('/settings', 'Settings')}
           {navLink('/support', 'Support')}
-          <Link
-            to="/signin"
-            onClick={() => setMenuOpen(false)}
-            className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-full font-semibold hover:bg-yellow-300 transition"
-          >
-            Sign In
-          </Link>
         </div>
       )}
     </nav>

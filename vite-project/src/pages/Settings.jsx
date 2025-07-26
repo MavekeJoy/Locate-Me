@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
   const [language, setLanguage] = useState('English');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen py-10 px-6 bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition duration-300">
@@ -89,6 +96,16 @@ const Settings = () => {
           <a href="#" className="block hover:underline">Terms of Service</a>
           <a href="#" className="block hover:underline">Privacy Policy</a>
         </div>
+      </div>
+
+      {/* Logout Button */}
+      <div className="mt-10">
+        <button
+          onClick={handleLogout}
+          className="w-20 py-3 bg-yellow-500 text-white rounded hover:bg-yellow-400 font-semibold"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
