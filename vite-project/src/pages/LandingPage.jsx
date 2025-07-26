@@ -1,5 +1,6 @@
+// src/pages/LandingPage.jsx
 import React, { useState } from 'react';
-import missingBg from '../assets/missing-bg.jpg';
+import missingBg from '../assets/missing-bg.png';
 import { FaCamera, FaSearchLocation, FaHeart } from 'react-icons/fa';
 
 const LandingPage = () => {
@@ -15,15 +16,8 @@ const LandingPage = () => {
     <div className="bg-gray-900 text-white min-h-screen">
       {/* Hero Section */}
       <section className="pt-24 md:pt-32 px-6 md:px-16 bg-gray-900">
-        <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-10">
-          {/* Text Side */}
-          <div className="md:w-1/2 text-center md:text-left">
-            <h1 className="text-5xl md:text-6xl mb-6 text-yellow-400 font-bebas tracking-widest">
-              LOCATE ME
-            </h1>
-          </div>
-
-          {/* Image Side */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+           {/* Right Side: Missing Image */}
           <div className="md:w-1/2 animate-slide-in-right">
             <img
               src={missingBg}
@@ -39,8 +33,8 @@ const LandingPage = () => {
         <h2 className="text-3xl font-bold mb-4 text-yellow-400">Why Locate Me?</h2>
         <p className="text-lg max-w-3xl mx-auto text-gray-300">
           Every face deserves to be seen. Locate Me is built to bridge the gap between missing persons and those who
-          can help. Whether you're a family member, a friend, or someone who's just observant — you're part of the
-          solution.
+          can help. Whether you're a family member, a friend, or someone who's just observant, we believe that "You're part of the
+          solution."
         </p>
       </section>
 
@@ -93,10 +87,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="text-center py-14 pt-4 text-sm text-gray-500 bg-gray-900">
-        © {new Date().getFullYear()} Locate Me. *Every Name Deserves A Way Home*.
-      </footer>
     </div>
   );
 };

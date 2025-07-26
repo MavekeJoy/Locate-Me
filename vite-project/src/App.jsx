@@ -7,17 +7,19 @@ import {
   useLocation,
 } from 'react-router-dom';
 
+import SplashScreen from './pages/SplashScreen';
+import Login from './pages/LoginIn';
+import SignInPage from './pages/SignInPage';
 import LandingPage from './pages/LandingPage';
 import FindMe from './pages/FindMe';
 import PostMe from './pages/PostMe';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
+import Support from './pages/Support';
+
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
-import Support from './pages/Support';
-import SignInPage from './pages/SignInPage';
 import PrivateRoute from './components/PrivateRoute';
-import Login from './pages/LoginIn';
 
 // Admin Pages & Layout
 import AdminLayout from './layouts/AdminLayout';
@@ -31,21 +33,18 @@ import AdminProfile from './pages/admin/AdminProfile';
 const AppContent = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
+  const isSplash = location.pathname === '/';
 
   return (
     <>
-      {!isAdmin && <Navbar />}
-      <div className={!isAdmin ? 'pt-10' : ''}>
+      {!isAdmin && !isSplash && <Navbar />}
+      <div className={!isAdmin && !isSplash ? 'pt-10' : ''}>
         <Routes>
-          {/* Login first */}
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/landing" element={<LandingPage />} />
-
-          {/* Publicly available */}
           <Route path="/find" element={<FindMe />} />
-
-          {/* Protected routes (after login) */}
           <Route
             path="/post"
             element={
@@ -78,8 +77,6 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
-
-          {/* Admin routes */}
           <Route
             path="/admin"
             element={
@@ -97,7 +94,7 @@ const AppContent = () => {
           </Route>
         </Routes>
       </div>
-      {!isAdmin && <MobileBottomNav />}
+      {!isAdmin && !isSplash && <MobileBottomNav />}
     </>
   );
 };

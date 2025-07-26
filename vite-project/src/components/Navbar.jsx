@@ -1,8 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import logo from '../assets/Logo.png';
+import { FaBars, FaTimes, FaMapMarkerAlt } from 'react-icons/fa'; // Add map icon
 
 const Navbar = () => {
   const location = useLocation();
@@ -27,19 +26,13 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900/90 backdrop-blur shadow-md text-white fixed top-0 w-full z-50">
       <div className="flex justify-between items-center px-6 py-3">
-        {/* Logo */}
+        {/* Logo with map icon */}
         <Link
-          to="/"
-          className="flex items-center gap-3 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"
+          to="/landing"
+          className="flex items-center gap-2 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"
         >
-          <div className="w-14 h-14 bg-white rounded-full p-1 shadow-lg">
-            <img
-              src={logo}
-              alt="Locate Me Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
-         
+          <FaMapMarkerAlt className="text-2xl" />
+          <span className="text-yellow-400 text-2xl font-bold">Locate Me</span>
         </Link>
 
         {/* Desktop Links */}
