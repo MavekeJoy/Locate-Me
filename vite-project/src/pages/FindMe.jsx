@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 const FindMe = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const [formData, setFormData] = useState({
     personName: '',
@@ -42,28 +44,32 @@ const FindMe = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!formData.photoFile) {
       alert('Please upload a photo before submitting.');
       return;
     }
 
-    console.log('Sighting Submitted:', formData);
-    alert('Thank you for reporting! 🙏');
+    alert('Thank you for reporting!');
     navigate('/');
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-5 pb-2 px-6 md:px-16 py-10">
-      <h2 className="text-3xl font-bold text-yellow-400 mb-8 text-center">Report a Sighting</h2>
+    <div
+      className={`min-h-screen py-10 px-6 md:px-16 pb-2 transition duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+      }`}
+    >
+      <h2 className="text-4xl font-bold text-yellow-400 mb-6 text-center">Report a Sighting</h2>
 
       <form
         onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg space-y-6"
+        className={`max-w-4xl mx-auto p-8 rounded-lg shadow-lg space-y-6 ${
+          theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
+        }`}
       >
         {/* Name or Unknown */}
         <div>
-          <label className="block mb-1 text-yellow-300">Who did you see?</label>
+          <label className="block mb-1 font-semibold">Who did you see?</label>
           <input
             type="text"
             name="personName"
@@ -71,9 +77,7 @@ const FindMe = () => {
             onChange={handleChange}
             disabled={formData.unknownName}
             required={!formData.unknownName}
-            className={`w-full px-4 py-2 bg-gray-700 rounded outline-none text-white ${
-              formData.unknownName ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className="w-full p-3 bg-gray-700 text-white rounded"
             placeholder="Enter the name"
           />
           <label className="mt-2 block text-sm">
@@ -90,13 +94,13 @@ const FindMe = () => {
 
         {/* Gender */}
         <div>
-          <label className="block mb-1 text-yellow-300">Gender</label>
+          <label className="block mb-1 font-semibold">Gender</label>
           <select
             name="gender"
             value={formData.gender}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
           >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
@@ -104,37 +108,37 @@ const FindMe = () => {
           </select>
         </div>
 
-        {/* Location */}
+        {/* Location Seen */}
         <div>
-          <label className="block mb-1 text-yellow-300">Where did you see them?</label>
+          <label className="block mb-1 font-semibold">Where did you see them?</label>
           <input
             type="text"
             name="locationSeen"
             value={formData.locationSeen}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
             placeholder="e.g. near Archives, Nairobi"
           />
         </div>
 
-        {/* Time */}
+        {/* Time Seen */}
         <div>
-          <label className="block mb-1 text-yellow-300">When did you see them?</label>
+          <label className="block mb-1 font-semibold">When did you see them?</label>
           <input
             type="text"
             name="timeSeen"
             value={formData.timeSeen}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
             placeholder="e.g. Today at 2PM"
           />
         </div>
 
         {/* Photo Upload */}
         <div>
-          <label className="block mb-1 text-yellow-300">
+          <label className="block mb-1 font-semibold">
             Upload Photo <span className="text-red-400">*</span>
           </label>
           <input
@@ -143,53 +147,74 @@ const FindMe = () => {
             accept="image/*"
             onChange={handleChange}
             required
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:bg-yellow-400 file:text-black hover:file:bg-yellow-300"
+            className="w-full p-3 bg-gray-700 text-white rounded"
           />
           {formData.photoPreview && (
             <img
               src={formData.photoPreview}
               alt="Preview"
-              className="mt-4 w-64 h-64 object-cover rounded shadow-md"
+              className="mt-4 h-32 rounded shadow border"
+            />
+          )}
+        </div>
+             <div>
+          <label className="block mb-1 font-semibold">
+            Upload Photo <span className="text-red-400">*</span>
+          </label>
+          <input
+            type="file"
+            name="photoFile"
+            accept="image/*"
+            onChange={handleChange}
+            required
+            className="w-full p-3 bg-gray-700 text-white rounded"
+          />
+          {formData.photoPreview && (
+            <img
+              src={formData.photoPreview}
+              alt="Preview"
+              className="mt-4 h-32 rounded shadow border"
             />
           )}
         </div>
 
+
         {/* Description */}
         <div>
-          <label className="block mb-1 text-yellow-300">Describe the sighting</label>
+          <label className="block mb-1 font-semibold">Describe the sighting</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            rows="3"
             required
-            rows="4"
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
             placeholder="Details, condition, clothing, etc."
           />
         </div>
 
-        {/* Your Info */}
+        {/* Reporter Info */}
         <div>
-          <label className="block mb-1 text-yellow-300">Your Name</label>
+          <label className="block mb-1 font-semibold">Your Name</label>
           <input
             type="text"
             name="yourName"
             value={formData.yourName}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
           />
         </div>
 
         <div>
-          <label className="block mb-1 text-yellow-300">Contact Info</label>
+          <label className="block mb-1 font-semibold">Contact Info</label>
           <input
             type="text"
             name="contactInfo"
             value={formData.contactInfo}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 rounded outline-none text-white"
+            className="w-full p-3 bg-gray-700 text-white rounded"
             placeholder="Phone or Email"
           />
         </div>

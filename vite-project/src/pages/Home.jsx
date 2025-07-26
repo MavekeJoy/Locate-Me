@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { FaTimes } from 'react-icons/fa';
-
+import { useTheme } from '../context/ThemeContext'; // ✅ Import Theme context
 const dummyPosts = [
   {
     id: 1,
@@ -37,6 +37,7 @@ const dummyPosts = [
 ];
 
 const Home = () => {
+  const { theme } = useTheme(); // ✅ Access current theme
   const [openCardId, setOpenCardId] = useState(null);
   const [modalPerson, setModalPerson] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -133,8 +134,14 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white pt-4 px-4 md:px-16 pb-8">
-      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">Reported Missing People</h2>
+    <div
+      className={`min-h-screen pt-4 px-4 md:px-16 pb-8 transition duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+      }`}
+    >
+      <h2 className="text-3xl font-bold text-yellow-400 mb-6 text-center">
+        Reported Missing People
+      </h2>
 
       {/* Filters */}
       <div className="md:hidden mb-4 flex justify-between items-center">
@@ -144,31 +151,46 @@ const Home = () => {
         >
           {filtersVisible ? 'Hide Filters' : 'Show Filters'}
         </button>
-        <button onClick={clearFilters} className="ml-2 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600">
+        <button
+          onClick={clearFilters}
+          className={`ml-2 px-4 py-2 rounded hover:bg-gray-600 ${
+            theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'
+          }`}
+        >
           Clear Filters
         </button>
       </div>
 
       {(filtersVisible || window.innerWidth >= 768) && (
-        <div className="bg-gray-800 p-4 rounded-lg mb-8 grid md:grid-cols-5 gap-4 text-sm">
+        <div
+          className={`p-4 rounded-lg mb-8 grid md:grid-cols-5 gap-4 text-sm ${
+            theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
+          }`}
+        >
           <input
             type="text"
             placeholder="Search by name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 bg-gray-700 text-white rounded col-span-1"
+            className={`p-2 rounded col-span-1 ${
+              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
+            }`}
           />
           <input
             type="text"
             placeholder="Filter by location"
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="p-2 bg-gray-700 text-white rounded col-span-1"
+            className={`p-2 rounded col-span-1 ${
+              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
+            }`}
           />
           <select
             value={genderFilter}
             onChange={(e) => setGenderFilter(e.target.value)}
-            className="p-2 bg-gray-700 text-white rounded col-span-1"
+            className={`p-2 rounded col-span-1 ${
+              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
+            }`}
           >
             <option value="">All Genders</option>
             <option value="Female">Female</option>
@@ -177,12 +199,19 @@ const Home = () => {
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="p-2 bg-gray-700 text-white rounded col-span-1"
+            className={`p-2 rounded col-span-1 ${
+              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
+            }`}
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
           </select>
-          <button className="hidden md:block px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600" onClick={clearFilters}>
+          <button
+            className={`hidden md:block px-4 py-2 rounded hover:bg-gray-600 ${
+              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'
+            }`}
+            onClick={clearFilters}
+          >
             Clear Filters
           </button>
         </div>
@@ -191,7 +220,12 @@ const Home = () => {
       {/* Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredPosts.map((person) => (
-          <div key={person.id} className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:scale-[1.01] transition">
+          <div
+            key={person.id}
+            className={`rounded-lg shadow-md overflow-hidden hover:scale-[1.01] transition ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-white border'
+            }`}
+          >
             <img
               src={person.photos[0]}
               alt={person.name}
@@ -207,16 +241,22 @@ const Home = () => {
         ))}
       </div>
 
-      {/* Modal with full profile */}
+      {/* Modal */}
       {modalPerson && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-2xl relative p-6">
-            <button onClick={() => setModalPerson(null)} className="absolute top-3 right-3 text-white hover:text-red-400 text-xl">
+            <button
+              onClick={() => setModalPerson(null)}
+              className="absolute top-3 right-3 text-white hover:text-red-400 text-xl"
+            >
               <FaTimes />
             </button>
-
             <div className="flex flex-col md:flex-row gap-4 mb-4">
-              <img src={modalPerson.photos[0]} alt={modalPerson.name} className="w-full md:w-1/2 h-60 object-cover rounded-lg" />
+              <img
+                src={modalPerson.photos[0]}
+                alt={modalPerson.name}
+                className="w-full md:w-1/2 h-60 object-cover rounded-lg"
+              />
               <div className="flex-1 space-y-1 text-sm md:text-base">
                 <h2 className="text-xl font-bold text-yellow-400">{modalPerson.name}</h2>
                 <p><strong>Age:</strong> {modalPerson.age}</p>
@@ -229,7 +269,6 @@ const Home = () => {
                 <p><strong>Reason:</strong> {modalPerson.reason}</p>
               </div>
             </div>
-
             <div className="grid grid-cols-2 gap-2 mt-4">
               {modalPerson.photos.slice(1).map((url, i) =>
                 url && (

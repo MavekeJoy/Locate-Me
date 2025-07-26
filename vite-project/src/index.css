@@ -1,7 +1,7 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 
+/* === DARK MODE OVERRIDES === */
 html.dark {
   background-color: #0f172a;
   color: white;
@@ -10,26 +10,66 @@ html.dark {
 html.dark .bg-white {
   background-color: #0f172a !important;
 }
+
 html.dark .text-gray-900 {
   color: white !important;
 }
+
 html.dark .bg-gray-100 {
   background-color: #1e293b !important;
 }
+
 html.dark .text-gray-500 {
   color: #cbd5e1 !important;
 }
 
-/* Optional animation */
+html.dark .bg-gray-700 {
+  background-color: #334155 !important;
+}
+
+html.dark .bg-gray-800 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-gray-900 {
+  background-color: #0f172a !important;
+}
+
+/* ✅ NEW: Override for bg-blue-950 */
+html.dark .bg-blue-950 {
+  background-color: #1e293b !important;
+}
+
+/* ✅ Make all gray text readable in dark mode */
+html.dark .text-gray-300,
+html.dark .text-gray-400,
+html.dark .text-gray-500,
+html.dark .text-gray-600,
+html.dark .text-gray-700,
+html.dark .text-gray-800,
+html.dark p,
+html.dark li,
+html.dark span,
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  color: #f1f5f9 !important;
+}
+
+/* === OPTIONAL TRANSITION === */
 html {
   transition: background-color 0.3s, color 0.3s;
 }
 
+/* === CUSTOM FONTS === */
 .font-bebas {
   font-family: 'Bebas Neue', cursive;
 }
 
-/* Flip card animation */
+/* === FLIP CARD ANIMATION === */
 .flip-card {
   perspective: 1000px;
 }
@@ -56,7 +96,7 @@ html {
   transform: rotateY(180deg);
 }
 
-/* Slide-in-right animation */
+/* === SLIDE-IN ANIMATION === */
 @keyframes slide-in-right {
   0% {
     transform: translateX(-80px);
@@ -70,6 +110,8 @@ html {
 .animate-slide-in-right {
   animation: slide-in-right 1s ease-out forwards;
 }
+
+/* === ZOOM IN ANIMATION === */
 @keyframes zoomIn {
   from {
     transform: scale(0.8);
@@ -80,10 +122,11 @@ html {
     opacity: 1;
   }
 }
-
 .animate-zoomIn {
   animation: zoomIn 0.3s ease-out;
 }
+
+/* === ZOOM IN-OUT ANIMATION === */
 @keyframes zoom-in-out {
   0% {
     transform: scale(0.3);
@@ -98,8 +141,6 @@ html {
     opacity: 1;
   }
 }
-
 .animate-zoom-in-out {
   animation: zoom-in-out 2.5s ease-in-out forwards;
 }
-
