@@ -2,26 +2,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaMapMarkerAlt, FaSun, FaMoon } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = () => {
   const location = useLocation();
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const { theme, toggleTheme } = useTheme();
 
-  const toggleTheme = () => {
-    const newTheme = !darkMode;
-    setDarkMode(newTheme);
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', newTheme);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // On first render, ensure theme matches saved preference
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const enabled = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setDarkMode(enabled);
-    document.documentElement.classList.toggle('dark', enabled);
-  }, []);
+  // Theme-based dynamic styles
+  const navbarBase =
+    theme === 'dark'
+      ? 'bg-gray-900 text-white'
+      : 'bg-white text-gray-900';
+
+  const linkBase = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
 
   const navLink = (path, label) => (
     <Link
@@ -30,7 +25,7 @@ const Navbar = () => {
       className={`block md:inline px-4 py-2 rounded-full transition font-medium ${
         location.pathname === path
           ? 'bg-yellow-400 text-gray-900'
-          : 'text-gray-200 hover:bg-yellow-300 hover:text-gray-900'
+          : `${linkBase} hover:bg-yellow-300 hover:text-gray-900`
       }`}
     >
       {label}
@@ -38,7 +33,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="bg-gray-900/90 backdrop-blur shadow-md text-white fixed top-0 w-full z-50">
+    <nav className={`fixed top-0 w-full z-50 backdrop-blur shadow-md transition-colors duration-300 ${navbarBase}`}>
       <div className="flex justify-between items-center px-6 py-3">
         {/* Logo */}
         <Link
@@ -49,7 +44,7 @@ const Navbar = () => {
           <span className="text-2xl font-bold">Locate Me</span>
         </Link>
 
-        {/* Desktop Links */}
+        {/* Desktop Nav Links */}
         <div className="hidden md:flex gap-6 items-center">
           {navLink('/home', 'Home')}
           {navLink('/find', 'Find Me')}
@@ -63,24 +58,21 @@ const Navbar = () => {
             className="ml-4 p-2 rounded-full bg-gray-700 hover:bg-yellow-400 hover:text-gray-900 transition"
             title="Toggle Theme"
           >
-            {darkMode ? <FaSun /> : <FaMoon />}
+            {theme === 'dark' ? <FaSun /> : <FaMoon />}
           </button>
         </div>
 
-        {/* Hamburger for mobile */}
+        {/* Mobile Theme Toggle Only */}
         <div className="md:hidden flex items-center gap-2">
-          {/* Theme Toggle (mobile) */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full bg-gray-700 hover:bg-yellow-400 hover:text-gray-900 transition"
             title="Toggle Theme"
           >
-            {darkMode ? <FaSun /> : <FaMoon />}
+            {theme === 'dark' ? <FaSun /> : <FaMoon />}
           </button>
-      
         </div>
       </div>
-
     </nav>
   );
 };

@@ -20,8 +20,9 @@ import Support from './pages/Support';
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import PrivateRoute from './components/PrivateRoute';
+import AdminBottomNav from './components/admin/AdminBottomNav';
 
-// Admin Pages & Layout
+// Admin Pages
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminSubmissions from './pages/admin/AdminSubmissions';
@@ -35,14 +36,22 @@ const AppContent = () => {
   const isAdmin = location.pathname.startsWith('/admin');
   const isSplash = location.pathname === '/';
 
+  const shouldShowNavbar = !isAdmin && !isSplash;
+  const shouldShowUserBottomNav = !isAdmin && !isSplash;
+  const shouldShowAdminBottomNav = isAdmin;
+
   return (
     <>
-      {!isAdmin && !isSplash && <Navbar />}
-      <div className={!isAdmin && !isSplash ? 'pt-10' : ''}>
+      {shouldShowNavbar && <Navbar />}
+
+      <div className={shouldShowNavbar ? 'pt-10' : ''}>
         <Routes>
+          {/* Splash & Auth */}
           <Route path="/" element={<SplashScreen />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<SignInPage />} />
+
+          {/* Public/User Pages */}
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/find" element={<FindMe />} />
           <Route
@@ -77,6 +86,8 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
+
+          {/* Admin Pages */}
           <Route
             path="/admin"
             element={
@@ -94,7 +105,10 @@ const AppContent = () => {
           </Route>
         </Routes>
       </div>
-      {!isAdmin && !isSplash && <MobileBottomNav />}
+
+      {/* Bottom Navigation */}
+      {shouldShowUserBottomNav && <MobileBottomNav />}
+      {shouldShowAdminBottomNav && <AdminBottomNav />}
     </>
   );
 };

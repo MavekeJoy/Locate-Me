@@ -34,7 +34,8 @@ const AdminSidebar = () => {
     }`;
 
   return (
-    <div className="h-screen bg-gray-900 text-white w-64 fixed top-0 left-0 flex flex-col justify-between p-6 shadow-lg z-40">
+    // Hidden on mobile (below md), visible on md+ screens
+    <div className="hidden md:flex h-screen bg-gray-900 text-white w-64 fixed top-0 left-0 flex-col justify-between p-6 shadow-lg z-40">
       {/* Logo */}
       <div>
         <div className="text-2xl font-bold text-yellow-400 mb-6">Locate Admin</div>

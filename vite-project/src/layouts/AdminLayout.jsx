@@ -2,14 +2,32 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from '../components/admin/AdminSidebar';
+import AdminBottomNav from '../components/admin/AdminBottomNav';
+import AdminTopbar  from '../components/admin/AdminTopBar';
 
 const AdminLayout = () => {
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
-      <AdminSidebar />
-      <main className="flex-1 p-6 overflow-y-auto">
-        <Outlet />
-      </main>
+      {/* Sidebar - only shown on medium screens and up */}
+      <div className="hidden md:block">
+        <AdminSidebar />
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col">
+        {/* Topbar - visible on all devices */}
+        <AdminTopbar />
+
+        {/* Page Content */}
+        <main className="flex-1 pt-16 pb-20 px-4 md:px-8 overflow-y-auto">
+          <Outlet />
+        </main>
+
+        {/* Bottom nav - only shown on small screens */}
+        <div className="md:hidden">
+          <AdminBottomNav />
+        </div>
+      </div>
     </div>
   );
 };

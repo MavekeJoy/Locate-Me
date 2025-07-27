@@ -11,7 +11,7 @@ const Settings = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/login');
+    navigate('/landing');
   };
 
   const baseBg = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';

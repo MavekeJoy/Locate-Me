@@ -1,9 +1,12 @@
 // src/pages/SignInPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
+import logo from '../assets/Logo.png';
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [existingUser, setExistingUser] = useState(null);
   const [formData, setFormData] = useState({
     email: '',
@@ -29,45 +32,48 @@ const SignInPage = () => {
     e.preventDefault();
 
     if (existingUser) {
-      // Handle login
       if (
         formData.username === existingUser.username &&
         formData.password === existingUser.password
       ) {
         alert('Login successful!');
+        localStorage.setItem('isAuthenticated', 'true');
         navigate(existingUser.role === 'admin' ? '/admin' : '/home');
       } else {
         alert('Invalid credentials.');
       }
     } else {
-      // Handle signup
       if (formData.password !== formData.confirmPassword) {
         alert('Passwords do not match!');
         return;
       }
 
       localStorage.setItem('user', JSON.stringify(formData));
+      localStorage.setItem('isAuthenticated', 'true');
       alert('Sign up successful!');
       navigate(formData.role === 'admin' ? '/admin' : '/home');
     }
   };
 
+  const bgBase = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
+  const formBase = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
+  const inputBase = theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-gray-900';
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-6">
+    <div className={`min-h-screen flex flex-col items-center justify-center px-6 transition-colors duration-500 ${bgBase}`}>
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 w-full max-w-md p-8 rounded-lg shadow-xl space-y-6"
+        className={`${formBase} w-full max-w-md p-8 rounded-lg shadow-xl space-y-6 animate-zoomIn`}
       >
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-yellow-400">
             {existingUser ? 'Welcome back!' : 'Your journey starts here'}
           </h2>
-          <p className="text-sm text-gray-300">
+          <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
             {existingUser ? 'Please log in' : 'Take the first step'}
           </p>
         </div>
 
-        {/* Login Form */}
         {existingUser ? (
           <>
             <div>
@@ -77,7 +83,7 @@ const SignInPage = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
@@ -88,14 +94,13 @@ const SignInPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
           </>
         ) : (
           <>
-            {/* Sign Up Form */}
             <div>
               <label className="block text-sm mb-1 text-yellow-400">E-mail</label>
               <input
@@ -103,7 +108,7 @@ const SignInPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
@@ -114,7 +119,7 @@ const SignInPage = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
@@ -125,7 +130,7 @@ const SignInPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
@@ -136,7 +141,7 @@ const SignInPage = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
                 required
               />
             </div>
@@ -146,7 +151,7 @@ const SignInPage = () => {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full bg-gray-700 text-white p-3 rounded"
+                className={`w-full p-3 rounded ${inputBase}`}
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>

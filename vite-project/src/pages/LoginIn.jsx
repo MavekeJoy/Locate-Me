@@ -1,14 +1,18 @@
-// src/pages/LoginIn.jsx
+// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
+
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
   });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -32,15 +36,20 @@ const Login = () => {
     }
   };
 
+  const bgBase = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
+  const formBase = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
+  const inputBase = theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-gray-900';
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white px-4">
+    <div className={`min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-500 ${bgBase}`}>
+
       <form
         onSubmit={handleLogin}
-        className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-sm space-y-5"
+        className={`${formBase} p-6 rounded-lg shadow-lg w-full max-w-sm space-y-5`}
       >
         <h2 className="text-2xl font-bold text-yellow-400 text-center">Welcome Back</h2>
 
-        {/* Email */}
+        {/* Email Field */}
         <div>
           <label className="block mb-1 font-semibold">Email</label>
           <input
@@ -49,12 +58,12 @@ const Login = () => {
             value={credentials.email}
             onChange={handleChange}
             required
-            className="w-full p-3 bg-gray-700 rounded"
+            className={`w-full p-3 rounded ${inputBase}`}
             placeholder="you@example.com"
           />
         </div>
 
-        {/* Password with show/hide icon */}
+        {/* Password Field with toggle */}
         <div>
           <label className="block mb-1 font-semibold">Password</label>
           <div className="relative">
@@ -64,7 +73,7 @@ const Login = () => {
               value={credentials.password}
               onChange={handleChange}
               required
-              className="w-full p-3 pr-10 bg-gray-700 rounded"
+              className={`w-full p-3 pr-10 rounded ${inputBase}`}
               placeholder="Enter your password"
             />
             <span
@@ -79,12 +88,12 @@ const Login = () => {
         {/* Login Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300"
+          className="w-full py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300 transition"
         >
           Login
         </button>
 
-        {/* Additional Links */}
+        {/* Links */}
         <div className="flex justify-between text-sm text-yellow-300">
           <button
             type="button"
