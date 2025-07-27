@@ -13,11 +13,6 @@ const LandingPage = () => {
     }
   };
 
-  const bgBase = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
-  const aboutText = theme === 'dark' ? 'text-gray-300' : 'text-gray-700';
-  const cardBase = theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-900';
-  const overlayBase = theme === 'dark' ? 'bg-gray-900 text-gray-200' : 'bg-white text-gray-700';
-
   return (
     <div className={`${bgBase} min-h-screen`}>
       {/* Hero Section */}
