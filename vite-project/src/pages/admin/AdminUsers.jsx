@@ -35,7 +35,7 @@ const AdminUsers = () => {
     },
   ]);
 
-  const [modalType, setModalType] = useState(null); // 'view' | 'suspend' | 'delete'
+  const [modalType, setModalType] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleView = (user) => {
@@ -48,7 +48,6 @@ const AdminUsers = () => {
       setSelectedUser(user);
       setModalType('suspend');
     } else {
-      // Reactivate
       setUsers((prev) =>
         prev.map((u) =>
           u.id === user.id ? { ...u, status: 'Active', suspendReason: '' } : u
@@ -81,17 +80,66 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen px-6 py-8 md:pl-64">
+    <div className="bg-gray-900 text-white min-h-screen px-4 py-6 md:px-6 md:py-8 md:pl-64">
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-yellow-400">Platform Users</h1>
         <input
           type="text"
           placeholder="Search users..."
-          className="bg-gray-700 text-white px-4 py-2 rounded-lg w-64"
+          className="bg-gray-700 text-white px-4 py-2 rounded-lg w-full sm:w-64"
         />
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Mobile Cards */}
+      <div className="space-y-4 md:hidden">
+        {users.map((user) => (
+          <div key={user.id} className="bg-gray-800 p-4 rounded-lg shadow-md space-y-2">
+            <div className="flex justify-between items-center">
+              <div className="font-bold text-lg text-yellow-300">{user.name}</div>
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  user.status === 'Active' ? 'bg-green-600' : 'bg-red-500'
+                }`}
+              >
+                {user.status}
+              </span>
+            </div>
+            <p className="text-sm text-gray-400">Email: {user.email}</p>
+            <p className="text-sm">Posts: {user.posts} | Sightings: {user.sightings}</p>
+            <p className="text-sm text-gray-400">Joined: {user.joined}</p>
+            {user.status === 'Suspended' && user.suspendReason && (
+              <p className="text-xs text-red-300">Reason: {user.suspendReason}</p>
+            )}
+            <div className="flex flex-wrap gap-2 pt-2">
+              <button
+                onClick={() => handleView(user)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+              >
+                View
+              </button>
+              <button
+                onClick={() => handleToggleStatus(user)}
+                className={`${
+                  user.status === 'Active'
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : 'bg-green-500 hover:bg-green-600'
+                } text-white px-3 py-1 rounded text-xs`}
+              >
+                {user.status === 'Active' ? 'Suspend' : 'Activate'}
+              </button>
+              <button
+                onClick={() => handleDelete(user)}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full table-auto text-left text-sm bg-gray-800 rounded-lg overflow-hidden">
           <thead className="bg-gray-700 text-yellow-300">
             <tr>
@@ -156,7 +204,7 @@ const AdminUsers = () => {
         </table>
       </div>
 
-      {/* Reusable Modal for All Actions */}
+      {/* Modal */}
       <UserModal
         show={!!modalType}
         type={modalType}

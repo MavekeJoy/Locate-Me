@@ -1,13 +1,12 @@
 // src/components/admin/AdminBottomNav.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   FaTachometerAlt,
   FaUsers,
   FaFileAlt,
   FaBell,
-  FaUserCircle,
-  FaCogs
+  FaCogs,
 } from 'react-icons/fa';
 
 const AdminBottomNav = () => {
@@ -22,21 +21,19 @@ const AdminBottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 w-full bg-gray-800 text-white border-t border-gray-700 z-50 md:hidden">
-      <div className="flex">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-40">
+      <div className="flex justify-between items-center px-1">
         {navItems.map((item) => (
-          <Link
+          <NavLink
             key={item.name}
             to={item.path}
             className={`w-full flex flex-col items-center justify-center py-2 text-xs ${
-              location.pathname === item.path
-                ? 'text-yellow-400'
-                : 'text-gray-300'
+              location.pathname === item.path ? 'text-yellow-400' : 'text-gray-400'
             }`}
           >
-            <div className="text-xl">{item.icon}</div>
-            <span className="mt-1">{item.name}</span>
-          </Link>
+            <div className="text-lg">{item.icon}</div>
+            <span className="text-[10px] mt-1">{item.name}</span>
+          </NavLink>
         ))}
       </div>
     </nav>
