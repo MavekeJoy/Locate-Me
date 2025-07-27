@@ -3,7 +3,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminBottomNav from '../components/admin/AdminBottomNav';
-import AdminTopbar  from '../components/admin/AdminTopBar';
 
 const AdminLayout = () => {
   return (
@@ -19,7 +18,7 @@ const AdminLayout = () => {
         <AdminTopbar />
 
         {/* Page Content */}
-        <main className="flex-1 pt-16 pb-20 px-4 md:px-8 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
 
