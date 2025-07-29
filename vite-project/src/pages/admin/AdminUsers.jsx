@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import UserModal from '../../components/admin/UserModal';
+import { useTheme } from '../../context/ThemeContext';
 
 const AdminUsers = () => {
+  const { theme } = useTheme(); // ✅ Access current theme
+
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -80,20 +83,31 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen px-4 py-6 md:px-6 md:py-8 md:pl-64">
+    <div
+      className={`min-h-screen px-4 py-6 md:px-6 md:py-8 md:pl-64 transition duration-300 ${
+        theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'
+      }`}
+    >
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-yellow-400">Platform Users</h1>
         <input
           type="text"
           placeholder="Search users..."
-          className="bg-gray-700 text-white px-4 py-2 rounded-lg w-full sm:w-64"
+          className={`px-4 py-2 rounded-lg w-full sm:w-64 transition ${
+            theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
+          }`}
         />
       </div>
 
       {/* Mobile Cards */}
       <div className="space-y-4 md:hidden">
         {users.map((user) => (
-          <div key={user.id} className="bg-gray-800 p-4 rounded-lg shadow-md space-y-2">
+          <div
+            key={user.id}
+            className={`p-4 rounded-lg shadow-md space-y-2 transition ${
+              theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900 border'
+            }`}
+          >
             <div className="flex justify-between items-center">
               <div className="font-bold text-lg text-yellow-300">{user.name}</div>
               <span
@@ -140,8 +154,16 @@ const AdminUsers = () => {
 
       {/* Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full table-auto text-left text-sm bg-gray-800 rounded-lg overflow-hidden">
-          <thead className="bg-gray-700 text-yellow-300">
+        <table
+          className={`min-w-full table-auto text-left text-sm rounded-lg overflow-hidden transition ${
+            theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900 border'
+          }`}
+        >
+          <thead
+            className={`${
+              theme === 'dark' ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'
+            }`}
+          >
             <tr>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email / Phone</th>
@@ -154,7 +176,12 @@ const AdminUsers = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b border-gray-600 hover:bg-gray-700">
+              <tr
+                key={user.id}
+                className={`border-b ${
+                  theme === 'dark' ? 'border-gray-600 hover:bg-gray-700' : 'border-gray-300 hover:bg-gray-100'
+                }`}
+              >
                 <td className="px-4 py-3">{user.name}</td>
                 <td className="px-4 py-3">{user.email}</td>
                 <td className="px-4 py-3">{user.posts}</td>

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import logo from '../assets/Logo.png';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -145,18 +144,7 @@ const SignInPage = () => {
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm mb-1 text-yellow-400">Role</label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className={`w-full p-3 rounded ${inputBase}`}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
+            
           </>
         )}
 

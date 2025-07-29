@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SubmissionModal from '../../components/admin/SubmissionModal';
+import { useTheme } from '../../context/ThemeContext'; // ✅ Theme context
 
 const mockSubmissions = [
   {
@@ -23,9 +24,10 @@ const mockSubmissions = [
 ];
 
 const AdminSubmissions = () => {
+  const { theme } = useTheme(); // ✅ use theme
   const [search, setSearch] = useState('');
   const [submissions, setSubmissions] = useState(mockSubmissions);
-  const [modalType, setModalType] = useState(null); // 'view' | 'resolve' | 'delete'
+  const [modalType, setModalType] = useState(null);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
 
   const openModal = (type, submission) => {
@@ -59,8 +61,15 @@ const AdminSubmissions = () => {
     s.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Theme styles
+  const bg = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900';
+  const card = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const input = theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-gray-900';
+  const border = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+  const subText = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
+
   return (
-    <div className="bg-gray-900 min-h-screen text-white px-6 py-8 md:pl-64">
+    <div className={`${bg} min-h-screen px-6 py-8 md:pl-64 transition-all duration-300`}>
       {/* Header */}
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
         <h2 className="text-2xl font-bold text-yellow-400">Submissions</h2>
@@ -69,15 +78,15 @@ const AdminSubmissions = () => {
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-gray-700 px-4 py-2 rounded text-white w-full sm:w-64"
+          className={`px-4 py-2 rounded w-full sm:w-64 ${input}`}
         />
       </div>
 
-      {/* Table for desktop */}
+      {/* Table (Desktop) */}
       <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full bg-gray-800 rounded shadow-lg overflow-hidden">
+        <table className={`min-w-full ${card} rounded shadow-lg overflow-hidden`}>
           <thead>
-            <tr className="bg-gray-700 text-yellow-300 text-left text-sm">
+            <tr className={`bg-gray-700 text-yellow-300 text-left text-sm`}>
               <th className="p-3">Image</th>
               <th className="p-3">Name</th>
               <th className="p-3">Type</th>
@@ -89,7 +98,7 @@ const AdminSubmissions = () => {
           </thead>
           <tbody>
             {filtered.map((submission) => (
-              <tr key={submission.id} className="border-t border-gray-700 text-sm">
+              <tr key={submission.id} className={`border-t ${border} text-sm`}>
                 <td className="p-3">
                   <img src={submission.image} alt="" className="w-12 h-12 rounded" />
                 </td>
@@ -97,7 +106,7 @@ const AdminSubmissions = () => {
                 <td className="p-3">{submission.type}</td>
                 <td className="p-3">{submission.date}</td>
                 <td className="p-3">{submission.location}</td>
-                <td className="p-3 text-yellow-300">{submission.status}</td>
+                <td className="p-3 text-yellow-400">{submission.status}</td>
                 <td className="p-3 space-x-2">
                   <button
                     onClick={() => openModal('view', submission)}
@@ -124,18 +133,18 @@ const AdminSubmissions = () => {
         </table>
       </div>
 
-      {/* Cards for mobile */}
+      {/* Cards (Mobile) */}
       <div className="md:hidden space-y-4">
         {filtered.map((submission) => (
-          <div key={submission.id} className="bg-gray-800 p-4 rounded shadow-lg">
+          <div key={submission.id} className={`${card} p-4 rounded shadow-lg`}>
             <div className="flex items-center gap-4 mb-2">
               <img src={submission.image} alt="" className="w-14 h-14 rounded" />
               <div>
-                <h3 className="text-lg font-semibold text-yellow-300">{submission.name}</h3>
-                <p className="text-xs text-gray-400">{submission.type} • {submission.date}</p>
+                <h3 className="text-lg font-semibold text-yellow-400">{submission.name}</h3>
+                <p className={`text-xs ${subText}`}>{submission.type} • {submission.date}</p>
               </div>
             </div>
-            <p className="text-sm"><span className="text-gray-400">Location:</span> {submission.location}</p>
+            <p className="text-sm"><span className={`${subText}`}>Location:</span> {submission.location}</p>
             <p className="text-sm text-yellow-400 mt-1">Status: {submission.status}</p>
             <div className="flex gap-2 mt-3">
               <button

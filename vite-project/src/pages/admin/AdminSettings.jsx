@@ -1,43 +1,72 @@
-// src/pages/admin/AdminSettings.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const AdminSettings = () => {
+  const { theme } = useTheme();
+
+  const [settings, setSettings] = useState({
+    notifications: true,
+    autoApprove: false,
+    showActivity: true,
+  });
+
+  const handleToggle = (key) => {
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const containerBg = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900';
+  const cardBg = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const toggleBg = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300';
+  const toggleCircle = theme === 'dark' ? 'bg-yellow-400' : 'bg-gray-900';
+
+  const renderToggle = (active) => (
+    <div
+      className={`w-14 h-8 rounded-full relative cursor-pointer ${active ? 'bg-green-500' : toggleBg}`}
+    >
+      <div
+        className={`absolute top-1 left-1 w-6 h-6 rounded-full ${toggleCircle} transition-all duration-300 ${
+          active ? 'translate-x-6' : ''
+        }`}
+      />
+    </div>
+  );
+
   return (
-    <div className="bg-gray-900 min-h-screen text-white px-6 py-8 md:pl-64">
-      <h1 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-8">Settings</h1>
+    <div className={`${containerBg} min-h-screen px-6 py-8 md:pl-64 transition-all duration-300`}>
+      <h2 className="text-2xl font-bold mb-6 text-yellow-400">Admin Settings</h2>
 
-
-      {/* Password Section */}
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 className="text-lg font-semibold mb-4">Change Password</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="password"
-            placeholder="Current Password"
-            className="bg-gray-700 px-4 py-2 rounded-lg text-white"
-          />
-          <input
-            type="password"
-            placeholder="New Password"
-            className="bg-gray-700 px-4 py-2 rounded-lg text-white"
-          />
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            className="bg-gray-700 px-4 py-2 rounded-lg text-white md:col-span-2"
-          />
-        </div>
-        <button className="mt-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded hover:bg-yellow-300 font-semibold">
-          Update Password
-        </button>
-      </div>
-
-      {/* Preferences */}
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 className="text-lg font-semibold mb-4">Preferences</h2>
+      <div className={`space-y-6 ${cardBg} p-6 rounded-lg shadow-lg`}>
+        {/* Notifications */}
         <div className="flex items-center justify-between">
-          <span>Enable Notifications</span>
-          <input type="checkbox" defaultChecked className="form-checkbox h-5 w-5 text-yellow-400" />
+          <div>
+            <h3 className="font-semibold text-lg">Enable Notifications</h3>
+            <p className="text-sm text-gray-400">Receive alerts for new activity.</p>
+          </div>
+          <button onClick={() => handleToggle('notifications')}>
+            {renderToggle(settings.notifications)}
+          </button>
+        </div>
+
+        {/* Auto Approve */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-lg">Auto Approve Posts</h3>
+            <p className="text-sm text-gray-400">Allow verified users’ posts to be auto-approved.</p>
+          </div>
+          <button onClick={() => handleToggle('autoApprove')}>
+            {renderToggle(settings.autoApprove)}
+          </button>
+        </div>
+
+        {/* Show Activity */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-lg">Show Admin Activity</h3>
+            <p className="text-sm text-gray-400">Display online and recent admin actions.</p>
+          </div>
+          <button onClick={() => handleToggle('showActivity')}>
+            {renderToggle(settings.showActivity)}
+          </button>
         </div>
       </div>
     </div>

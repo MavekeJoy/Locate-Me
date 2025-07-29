@@ -1,55 +1,124 @@
-// src/components/admin/AdminTopbar.jsx
-import React, { useEffect, useState } from 'react';
-import { FaMapMarkerAlt, FaSun, FaMoon } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+// src/App.jsx
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from 'react-router-dom';
 
-const AdminTopbar = () => {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+import SplashScreen from './pages/SplashScreen';
+import Login from './pages/LoginIn';
+import SignInPage from './pages/SignInPage';
+import LandingPage from './pages/LandingPage';
+import FindMe from './pages/FindMe';
+import PostMe from './pages/PostMe';
+import Settings from './pages/Settings';
+import Home from './pages/Home';
+import Support from './pages/Support';
 
-  const toggleTheme = () => {
-    const newTheme = !darkMode;
-    setDarkMode(newTheme);
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', newTheme);
-  };
+import Navbar from './components/Navbar';
+import MobileBottomNav from './components/MobileBottomNav';
+import PrivateRoute from './components/PrivateRoute';
+import AdminBottomNav from './components/admin/AdminBottomNav';
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const enabled = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setDarkMode(enabled);
-    document.documentElement.classList.toggle('dark', enabled);
-  }, []);
+// Admin Pages
+import AdminLayout from './layouts/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminSubmissions from './pages/admin/AdminSubmissions';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminSettings from './pages/admin/AdminSettings';
+import AdminNotifications from './pages/admin/AdminNotifications';
+import AdminProfile from './pages/admin/AdminProfile';
+
+const AppContent = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+  const isSplash = location.pathname === '/';
+
+  const shouldShowNavbar = !isAdmin && !isSplash;
+  const shouldShowUserBottomNav = !isAdmin && !isSplash;
+  const shouldShowAdminBottomNav = isAdmin;
 
   return (
-    <header className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-gray-900 text-white flex items-center justify-between px-4 shadow-md">
-      {/* Left side: Logo */}
-      <div className="flex items-center gap-2 text-yellow-400 font-bold text-lg">
-        <FaMapMarkerAlt />
-        <span>Locate Me</span>
+    <>
+      {shouldShowNavbar && <Navbar />}
+
+      <div className={shouldShowNavbar ? 'pt-10' : ''}>
+        <Routes>
+          {/* Splash & Auth */}
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signin" element={<SignInPage />} />
+
+          {/* Public/User Pages */}
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/find" element={<FindMe />} />
+          <Route
+            path="/post"
+            element={
+              <PrivateRoute>
+                <PostMe />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <Settings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/support"
+            element={
+              <PrivateRoute>
+                <Support />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Admin Pages */}
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute role="admin">
+                <AdminLayout />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="submissions" element={<AdminSubmissions />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="notifications" element={<AdminNotifications />} />
+            <Route path="profile" element={<AdminProfile />} />
+          </Route>
+        </Routes>
       </div>
 
-      {/* Right side: Theme toggle & profile */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-full bg-gray-700 hover:bg-yellow-400 hover:text-gray-900 transition"
-          title="Toggle Theme"
-        >
-          {darkMode ? <FaSun /> : <FaMoon />}
-        </button>
-        
-        {/* ✅ Clickable profile icon linking to /admin/profile */}
-        <Link
-          to="/admin/profile"
-          className="w-9 h-9 rounded-full bg-yellow-400 text-gray-900 flex items-center justify-center font-bold hover:bg-yellow-300"
-          title="Go to Profile"
-        >
-          RW
-        </Link>
-      </div>
-    </header>
+      {/* Bottom Navigation */}
+      {shouldShowUserBottomNav && <MobileBottomNav />}
+      {shouldShowAdminBottomNav && <AdminBottomNav />}
+    </>
   );
 };
 
-export default AdminTopbar;
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+export default App;
