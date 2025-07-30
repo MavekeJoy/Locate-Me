@@ -1,8 +1,8 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { loginWithGoogle } from '../services/authService'; // ✅ import this
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,13 +36,27 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await loginWithGoogle();
+      const user = result.user;
+      console.log('Google user:', user);
+
+      // Optional: Store to localStorage or Firebase backend
+      localStorage.setItem('isAuthenticated', 'true');
+      navigate('/landing');
+    } catch (error) {
+      console.error('Google login failed:', error.message);
+      alert('Google sign-in failed. Try again.');
+    }
+  };
+
   const bgBase = theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900';
   const formBase = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
   const inputBase = theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-gray-900';
 
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-500 ${bgBase}`}>
-
       <form
         onSubmit={handleLogin}
         className={`${formBase} p-6 rounded-lg shadow-lg w-full max-w-sm space-y-5`}
@@ -63,7 +77,7 @@ const Login = () => {
           />
         </div>
 
-        {/* Password Field with toggle */}
+        {/* Password Field */}
         <div>
           <label className="block mb-1 font-semibold">Password</label>
           <div className="relative">
@@ -91,6 +105,15 @@ const Login = () => {
           className="w-full py-3 bg-yellow-400 text-gray-900 font-bold rounded hover:bg-yellow-300 transition"
         >
           Login
+        </button>
+
+        {/* Google Login Button */}
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full py-3 bg-green-500 text-white font-semibold rounded hover:bg-green-400 transition"
+        >
+          Sign in with Google
         </button>
 
         {/* Links */}

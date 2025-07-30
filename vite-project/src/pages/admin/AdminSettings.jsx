@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
 const AdminSettings = () => {
-  const { theme } = useTheme();
-
+  const { theme, toggleTheme } = useTheme(); // toggleTheme added
   const [settings, setSettings] = useState({
     notifications: true,
     autoApprove: false,
@@ -66,6 +65,17 @@ const AdminSettings = () => {
           </div>
           <button onClick={() => handleToggle('showActivity')}>
             {renderToggle(settings.showActivity)}
+          </button>
+        </div>
+
+        {/* Dark Mode Toggle for Desktop Users */}
+        <div className="hidden md:flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-lg">Enable Dark Mode</h3>
+            <p className="text-sm text-gray-400">Toggle between dark and light themes (visible on desktop).</p>
+          </div>
+          <button onClick={toggleTheme}>
+            {renderToggle(theme === 'dark')}
           </button>
         </div>
       </div>

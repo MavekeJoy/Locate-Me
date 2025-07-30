@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     <nav className={`fixed top-0 w-full z-50 backdrop-blur shadow-md transition-colors duration-300 ${navbarBase}`}>
       <div className="flex justify-between items-center px-6 py-3">
-        {/* Logo */}
+       
         <Link
           to="/landing"
           className="flex items-center gap-2 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"

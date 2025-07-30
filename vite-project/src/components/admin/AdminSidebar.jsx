@@ -1,6 +1,6 @@
 // src/components/AdminSidebar.jsx
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate,Link} from 'react-router-dom';
 import {
   FaTachometerAlt,
   FaUsers,
@@ -10,9 +10,11 @@ import {
   FaBell,
   FaUserCircle,
 } from 'react-icons/fa';
+import { useTheme } from '../../context/ThemeContext';
 
 const AdminSidebar = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const [notifications] = useState([
     { id: 1, message: 'New submission received', isRead: false },
@@ -23,22 +25,30 @@ const AdminSidebar = () => {
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleLogout = () => {
-    navigate('/');
+    navigate('/'); // Redirect to landing/user interface
   };
+
+  const bgColor = theme === 'dark' ? 'bg-gray-900' : 'bg-white';
+  const textColor = theme === 'dark' ? 'text-white' : 'text-gray-800';
+  const hoverBg = theme === 'dark' ? 'hover:bg-gray-700 hover:text-white' : 'hover:bg-gray-200 hover:text-gray-900';
+  const activeLink = theme === 'dark' ? 'bg-yellow-400 text-gray-900' : 'bg-yellow-300 text-gray-900';
 
   const linkClass = ({ isActive }) =>
     `flex items-center justify-between px-4 py-3 rounded-lg transition text-sm font-medium ${
-      isActive
-        ? 'bg-yellow-400 text-gray-900'
-        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+      isActive ? activeLink : `${textColor} ${hoverBg}`
     }`;
 
   return (
-    // Hidden on mobile (below md), visible on md+ screens
-    <div className="hidden md:flex h-screen bg-gray-900 text-white w-64 fixed top-0 left-0 flex-col justify-between p-6 shadow-lg z-40">
-      {/* Logo */}
+    <div className={`hidden md:flex h-screen ${bgColor} ${textColor} w-64 fixed top-0 left-0 flex-col justify-between p-6 shadow-lg z-40 transition-all duration-300`}>
+    
       <div>
-        <div className="text-2xl font-bold text-yellow-400 mb-6">Locate Admin</div>
+         <Link
+          to="/landing"
+          className="flex items-center gap-2 text-xl font-bold text-yellow-400 hover:text-yellow-300 transition"
+        >
+         
+          <span className="text-2xl font-bold">Locate Me</span>
+        </Link>
 
         {/* Nav Links */}
         <nav className="space-y-2">
@@ -105,11 +115,11 @@ const AdminSidebar = () => {
         </nav>
       </div>
 
-      {/* Logout */}
+      {/* Logout Button */}
       <div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-300 w-full"
+          className="flex items-center gap-3 px-4 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-300 w-full transition"
         >
           <FaSignOutAlt />
           Logout

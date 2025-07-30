@@ -1,0 +1,42 @@
+[debug] [2025-07-30T11:31:09.699Z] ----------------------------------------------------------------------
+[debug] [2025-07-30T11:31:09.705Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Mavek\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-07-30T11:31:09.706Z] CLI Version:   14.11.1
+[debug] [2025-07-30T11:31:09.706Z] Platform:      win32
+[debug] [2025-07-30T11:31:09.707Z] Node Version:  v22.17.0
+[debug] [2025-07-30T11:31:09.708Z] Time:          Wed Jul 30 2025 14:31:09 GMT+0300 (East Africa Time)
+[debug] [2025-07-30T11:31:09.708Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-30T11:31:09.723Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-30T11:31:09.724Z] > authorizing via signed-in user (mavekejoy@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Mavek\Desktop\LOCATE ME
+
+[debug] [2025-07-30T11:33:06.951Z] ----------------------------------------------------------------------
+[debug] [2025-07-30T11:33:06.957Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Mavek\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-07-30T11:33:06.958Z] CLI Version:   14.11.1
+[debug] [2025-07-30T11:33:06.958Z] Platform:      win32
+[debug] [2025-07-30T11:33:06.959Z] Node Version:  v22.17.0
+[debug] [2025-07-30T11:33:06.959Z] Time:          Wed Jul 30 2025 14:33:06 GMT+0300 (East Africa Time)
+[debug] [2025-07-30T11:33:06.960Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-30T11:33:06.972Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-30T11:33:06.973Z] > authorizing via signed-in user (mavekejoy@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Mavek\Desktop\LOCATE ME
+

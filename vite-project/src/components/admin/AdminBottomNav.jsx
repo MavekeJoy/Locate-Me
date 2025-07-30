@@ -1,41 +1,69 @@
-// src/components/admin/AdminBottomNav.jsx
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import {
-  FaTachometerAlt,
-  FaUsers,
-  FaFileAlt,
-  FaBell,
-  FaCogs,
-} from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
+import { FaHome, FaUsers, FaCog, FaBell, FaUserFriends } from 'react-icons/fa';
+import { useTheme } from '../../context/ThemeContext';
 
 const AdminBottomNav = () => {
-  const location = useLocation();
+  const { theme } = useTheme();
 
-  const navItems = [
-    { name: 'Dashboard', path: '/admin', icon: <FaTachometerAlt /> },
-    { name: 'Users', path: '/admin/users', icon: <FaUsers /> },
-    { name: 'Submissions', path: '/admin/submissions', icon: <FaFileAlt /> },
-    { name: 'Notifications', path: '/admin/notifications', icon: <FaBell /> },
-    { name: 'Settings', path: '/admin/settings', icon: <FaCogs /> },
-  ];
+  const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const textColor = theme === 'dark' ? 'text-yellow-300' : 'text-gray-800';
+  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+  const activeColor = theme === 'dark' ? 'text-yellow-400' : 'text-yellow-500';
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 z-40">
-      <div className="flex justify-between items-center px-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.name}
-            to={item.path}
-            className={`w-full flex flex-col items-center justify-center py-2 text-xs ${
-              location.pathname === item.path ? 'text-yellow-400' : 'text-gray-400'
-            }`}
-          >
-            <div className="text-lg">{item.icon}</div>
-            <span className="text-[10px] mt-1">{item.name}</span>
-          </NavLink>
-        ))}
-      </div>
+    <nav
+      className={`fixed bottom-0 left-0 w-full ${bgColor} ${textColor} border-t ${borderColor} flex justify-around items-center py-3 z-50 md:hidden transition-all duration-300`}
+    >
+      <NavLink
+        to="/admin"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-xs ${isActive ? activeColor : ''}`
+        }
+      >
+        <FaHome className="text-lg mb-1" />
+        Dashboard
+      </NavLink>
+
+      <NavLink
+        to="/admin/submissions"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-xs ${isActive ? activeColor : ''}`
+        }
+      >
+        <FaUsers className="text-lg mb-1" />
+        Submissions
+      </NavLink>
+
+      <NavLink
+        to="/admin/users"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-xs ${isActive ? activeColor : ''}`
+        }
+      >
+        <FaUserFriends className="text-lg mb-1" />
+        Users
+      </NavLink>
+
+      <NavLink
+        to="/admin/notifications"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-xs ${isActive ? activeColor : ''}`
+        }
+      >
+        <FaBell className="text-lg mb-1" />
+        Alerts
+      </NavLink>
+
+      <NavLink
+        to="/admin/settings"
+        className={({ isActive }) =>
+          `flex flex-col items-center text-xs ${isActive ? activeColor : ''}`
+        }
+      >
+        <FaCog className="text-lg mb-1" />
+        Settings
+      </NavLink>
     </nav>
   );
 };

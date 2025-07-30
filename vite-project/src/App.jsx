@@ -5,6 +5,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from 'react-router-dom';
 
 import SplashScreen from './pages/SplashScreen';
@@ -21,6 +22,8 @@ import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import PrivateRoute from './components/PrivateRoute';
 import AdminBottomNav from './components/admin/AdminBottomNav';
+import AdminRoute from './routes/AdminRoute'; // ✅ NEW
+import NotFound from './pages/NotFound'; // ✅ NEW
 
 // Admin Pages
 import AdminLayout from './layouts/AdminLayout';
@@ -31,8 +34,13 @@ import AdminSettings from './pages/admin/AdminSettings';
 import AdminNotifications from './pages/admin/AdminNotifications';
 import AdminProfile from './pages/admin/AdminProfile';
 
+// Optional: Replace with your context/provider if needed
+import { useAuth } from './context/AuthContext'; // Adjust path as needed
+
 const AppContent = () => {
   const location = useLocation();
+  const { user } = useAuth(); // ✅ assuming this holds user and role info
+
   const isAdmin = location.pathname.startsWith('/admin');
   const isSplash = location.pathname === '/';
 
@@ -87,13 +95,13 @@ const AppContent = () => {
             }
           />
 
-          {/* Admin Pages */}
+          {/* Admin Pages - protected by AdminRoute */}
           <Route
-            path="/admin"
+            path="/admin/*"
             element={
-              <PrivateRoute role="admin">
+              <AdminRoute user={user}>
                 <AdminLayout />
-              </PrivateRoute>
+              </AdminRoute>
             }
           >
             <Route index element={<AdminDashboard />} />
@@ -103,6 +111,10 @@ const AppContent = () => {
             <Route path="notifications" element={<AdminNotifications />} />
             <Route path="profile" element={<AdminProfile />} />
           </Route>
+
+          {/* 404 and fallback */}
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 

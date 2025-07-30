@@ -85,17 +85,24 @@ const AdminSubmissions = () => {
       {/* Table (Desktop) */}
       <div className="hidden md:block overflow-x-auto">
         <table className={`min-w-full ${card} rounded shadow-lg overflow-hidden`}>
-          <thead>
-            <tr className={`bg-gray-700 text-yellow-300 text-left text-sm`}>
-              <th className="p-3">Image</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Type</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Location</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
+       <thead>
+  <tr
+    className={`text-left text-sm ${
+      theme === 'dark'
+        ? 'bg-gray-700 text-yellow-300'
+        : 'bg-gray-200 text-gray-900'
+    }`}
+  >
+    <th className="p-3">Image</th>
+    <th className="p-3">Name</th>
+    <th className="p-3">Type</th>
+    <th className="p-3">Date</th>
+    <th className="p-3">Location</th>
+    <th className="p-3">Status</th>
+    <th className="p-3">Actions</th>
+  </tr>
+</thead>
+
           <tbody>
             {filtered.map((submission) => (
               <tr key={submission.id} className={`border-t ${border} text-sm`}>
