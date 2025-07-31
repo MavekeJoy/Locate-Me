@@ -9,10 +9,12 @@ const Settings = () => {
   const [language, setLanguage] = useState('English');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/landing');
-  };
+const handleLogout = () => {
+  localStorage.removeItem('user');
+  localStorage.removeItem('isAuthenticated');
+  navigate('/login');
+};
+
 
   const baseBg = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
   const baseText = theme === 'dark' ? 'text-white' : 'text-gray-900';

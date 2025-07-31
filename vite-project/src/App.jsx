@@ -1,10 +1,11 @@
 // src/App.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
+  useNavigate,
   Navigate,
 } from 'react-router-dom';
 
@@ -22,8 +23,8 @@ import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import PrivateRoute from './components/PrivateRoute';
 import AdminBottomNav from './components/admin/AdminBottomNav';
-import AdminRoute from './routes/AdminRoute'; // ✅ NEW
-import NotFound from './pages/NotFound'; // ✅ NEW
+import AdminRoute from './routes/AdminRoute';
+import NotFound from './pages/NotFound';
 
 // Admin Pages
 import AdminLayout from './layouts/AdminLayout';
@@ -34,12 +35,13 @@ import AdminSettings from './pages/admin/AdminSettings';
 import AdminNotifications from './pages/admin/AdminNotifications';
 import AdminProfile from './pages/admin/AdminProfile';
 
-// Optional: Replace with your context/provider if needed
-import { useAuth } from './context/AuthContext'; // Adjust path as needed
+// Auth Context (optional if you have one)
+import { useAuth } from './context/AuthContext';
 
 const AppContent = () => {
   const location = useLocation();
-  const { user } = useAuth(); // ✅ assuming this holds user and role info
+  const navigate = useNavigate();
+  const { user } = useAuth?.() || {};
 
   const isAdmin = location.pathname.startsWith('/admin');
   const isSplash = location.pathname === '/';
@@ -48,10 +50,21 @@ const AppContent = () => {
   const shouldShowUserBottomNav = !isAdmin && !isSplash;
   const shouldShowAdminBottomNav = isAdmin;
 
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (isAuthenticated && storedUser) {
+      const target = storedUser.role === 'admin' ? '/admin' : '/home';
+      if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/signin') {
+        navigate(target);
+      }
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <>
       {shouldShowNavbar && <Navbar />}
-
       <div className={shouldShowNavbar ? 'pt-10' : ''}>
         <Routes>
           {/* Splash & Auth */}
@@ -95,7 +108,7 @@ const AppContent = () => {
             }
           />
 
-          {/* Admin Pages - protected by AdminRoute */}
+          {/* Admin Pages */}
           <Route
             path="/admin/*"
             element={
@@ -112,13 +125,13 @@ const AppContent = () => {
             <Route path="profile" element={<AdminProfile />} />
           </Route>
 
-          {/* 404 and fallback */}
+          {/* 404 fallback */}
           <Route path="/not-found" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navs */}
       {shouldShowUserBottomNav && <MobileBottomNav />}
       {shouldShowAdminBottomNav && <AdminBottomNav />}
     </>
