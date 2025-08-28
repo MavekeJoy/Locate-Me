@@ -11,7 +11,7 @@ const SplashScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate('/landing'); // Navigate after 5 seconds
-    }, 5000);
+    }, ); // Remove the time to prevent unnecessary loading 
 
     return () => clearTimeout(timer);
   }, [navigate]);
