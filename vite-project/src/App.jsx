@@ -18,14 +18,13 @@ import PostMe from './pages/PostMe';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
 import Support from './pages/Support';
-
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
 import PrivateRoute from './components/PrivateRoute';
 import AdminBottomNav from './components/admin/AdminBottomNav';
 import AdminRoute from './routes/AdminRoute';
 import NotFound from './pages/NotFound';
-
+import MessageView from './pages/MessageView';
 // Admin Pages
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -107,6 +106,14 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
+          <Route
+  path="/message/:postId"
+  element={
+    <PrivateRoute>
+      <MessageView />
+    </PrivateRoute>
+  }
+/>
 
           {/* Admin Pages */}
           <Route

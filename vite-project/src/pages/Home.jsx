@@ -3,7 +3,7 @@ import { FaTimes } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { db } from '../firebase'; // ✅ Import Firebase database instance
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'; // ✅ Import Firestore functions
-
+import { FaRegCommentDots } from 'react-icons/fa';
 const Home = () => {
   const { theme } = useTheme();
   const [posts, setPosts] = useState([]); // ✅ New state for fetched posts
@@ -233,12 +233,26 @@ const Home = () => {
                 className="w-full h-64 object-cover rounded-t cursor-pointer"
                 onClick={() => setModalPerson(person)}
               />
-              <div className="p-4">
-                <h3 className="text-xl font-bold mb-1">{person.name}</h3>
-                <p className="text-sm text-gray-400">Last Seen: {person.location}</p>
-                <p className="text-xs text-yellow-400">📅 Posted: {person.date}</p>
-              </div>
+             
+              
+<div className="p-4">
+  <h3 className="text-xl font-bold mb-1">{person.name}</h3>
+  <p className="text-sm text-gray-400">Last Seen: {person.location}</p>
+  <p className="text-xs text-yellow-400">📅 Posted: {person.date}</p>
+
+  {/* 👇 Enhanced Send Message Button */}
+  <a
+    href={`/message/${person.id}`}
+    className="mt-3 inline-flex items-center gap-2 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black px-4 py-2 rounded-full font-semibold shadow hover:scale-105 hover:shadow-md transition-transform duration-200"
+  >
+    <FaRegCommentDots className="text-lg" />
+    Send Message
+  </a>
+</div>
+
+
             </div>
+            
           ))}
         </div>
       )}
