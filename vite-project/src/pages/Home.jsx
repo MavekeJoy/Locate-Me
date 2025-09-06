@@ -13,7 +13,6 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [genderFilter, setGenderFilter] = useState('');
-  const [sortOrder, setSortOrder] = useState('newest');
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [comments, setComments] = useState({});
   const [replyingTo, setReplyingTo] = useState({});
@@ -58,7 +57,6 @@ const Home = () => {
     setSearchTerm('');
     setLocationFilter('');
     setGenderFilter('');
-    setSortOrder('newest');
   };
 
   const filteredPosts = useMemo(() => {
@@ -66,85 +64,80 @@ const Home = () => {
     if (searchTerm) result = result.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
     if (locationFilter) result = result.filter((p) => p.location.toLowerCase().includes(locationFilter.toLowerCase()));
     if (genderFilter) result = result.filter((p) => p.gender === genderFilter);
-    result.sort((a, b) =>
-      sortOrder === 'newest' ? new Date(b.date) - new Date(a.date) : new Date(a.date) - new Date(b.date)
-    );
+    result.sort((a, b) => new Date(b.date) - new Date(a.date)); // Default to newest first
     return result;
-  }, [posts, searchTerm, locationFilter, genderFilter, sortOrder]); // ✅ Add posts to dependency array
+  }, [posts, searchTerm, locationFilter, genderFilter]); // ✅ Add posts to dependency array
 
   const handleCommentSubmit = (id, text, parentId = null) => {
-      // (Your existing comment logic, not modified)
-      if (!text.trim()) return;
-      setComments((prev) => {
-        const postComments = prev[id] || [];
-        const newComment = {
-          id: Date.now(),
-          text,
-          parentId,
-          timestamp: new Date(),
-        };
-        return { ...prev, [id]: [...postComments, newComment] };
-      });
-    };
+    if (!text.trim()) return;
+    setComments((prev) => {
+      const postComments = prev[id] || [];
+      const newComment = {
+        id: Date.now(),
+        text,
+        parentId,
+        timestamp: new Date(),
+      };
+      return { ...prev, [id]: [...postComments, newComment] };
+    });
+  };
 
-    const handleDeleteComment = (postId, commentId) => {
-      // (Your existing comment logic, not modified)
-      setComments((prev) => ({
-        ...prev,
-        [postId]: prev[postId].filter((c) => c.id !== commentId && c.parentId !== commentId),
-      }));
-    };
+  const handleDeleteComment = (postId, commentId) => {
+    setComments((prev) => ({
+      ...prev,
+      [postId]: prev[postId].filter((c) => c.id !== commentId && c.parentId !== commentId),
+    }));
+  };
 
-    const renderComments = (postId, parentId = null) => {
-      // (Your existing comment logic, not modified)
-      const postComments = comments[postId] || [];
-      return postComments
-        .filter((c) => c.parentId === parentId)
-        .map((c) => (
-          <div key={c.id} className="mt-2 ml-4 border-l border-yellow-500 pl-2">
-            <p className="text-sm text-white">{c.text}</p>
-            <div className="flex gap-2 text-xs mt-1">
-              <button
-                className="text-yellow-400 hover:underline"
-                onClick={() => setReplyingTo({ postId, parentId: c.id })}
-              >
-                Reply
-              </button>
-              <button
-                className="text-red-400 hover:underline"
-                onClick={() => handleDeleteComment(postId, c.id)}
-              >
-                Delete
-              </button>
-            </div>
-            {replyingTo.postId === postId && replyingTo.parentId === c.id && (
-              <div className="mt-2">
-                <input
-                  type="text"
-                  placeholder="Write a reply..."
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleCommentSubmit(postId, e.target.value, c.id);
-                      e.target.value = '';
-                      setReplyingTo({});
-                    }
-                  }}
-                  className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
-                />
-              </div>
-            )}
-            {renderComments(postId, c.id)}
+  const renderComments = (postId, parentId = null) => {
+    const postComments = comments[postId] || [];
+    return postComments
+      .filter((c) => c.parentId === parentId)
+      .map((c) => (
+        <div key={c.id} className="mt-2 ml-4 border-l border-yellow-500 pl-2">
+          <p className="text-sm text-white">{c.text}</p>
+          <div className="flex gap-2 text-xs mt-1">
+            <button
+              className="text-yellow-400 hover:underline"
+              onClick={() => setReplyingTo({ postId, parentId: c.id })}
+            >
+              Reply
+            </button>
+            <button
+              className="text-red-400 hover:underline"
+              onClick={() => handleDeleteComment(postId, c.id)}
+            >
+              Delete
+            </button>
           </div>
-        ));
-    };
-
-    if (loading) {
-      return (
-        <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
-          <p>Loading missing person reports...</p>
+          {replyingTo.postId === postId && replyingTo.parentId === c.id && (
+            <div className="mt-2">
+              <input
+                type="text"
+                placeholder="Write a reply..."
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleCommentSubmit(postId, e.target.value, c.id);
+                    e.target.value = '';
+                    setReplyingTo({});
+                  }
+                }}
+                className="w-full mt-1 p-2 rounded bg-gray-700 text-white"
+              />
+            </div>
+          )}
+          {renderComments(postId, c.id)}
         </div>
-      );
-    }
+      ));
+  };
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+        <p>Loading missing person reports...</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -176,7 +169,7 @@ const Home = () => {
 
       {(filtersVisible || window.innerWidth >= 768) && (
         <div
-          className={`p-4 rounded-lg mb-8 grid md:grid-cols-5 gap-4 text-sm ${
+          className={`p-4 rounded-lg mb-8 grid md:grid-cols-4 gap-4 text-sm ${
             theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
           }`}
         >
@@ -208,16 +201,6 @@ const Home = () => {
             <option value="">All Genders</option>
             <option value="Female">Female</option>
             <option value="Male">Male</option>
-          </select>
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className={`p-2 rounded col-span-1 ${
-              theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-white text-black border'
-            }`}
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
           </select>
           <button
             className={`hidden md:block px-4 py-2 rounded hover:bg-gray-600 ${
